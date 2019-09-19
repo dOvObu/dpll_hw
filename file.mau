@@ -22,7 +22,8 @@ DPLL (
 
 DPLL (
    Tseitin (
-      ((p => q) => (!q => !p)) and ((!q => !p) => (p => q))
+      ((p => q) => (!q => !p)) and
+      ((!q => !p) => (p => q))
    )
 )
 

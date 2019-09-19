@@ -75,13 +75,6 @@ int main()
       << "\n expr:\t" << exprPool.size()
       << endl;
 
-
-   //ofstream fout("kek.txt");
-   //writer.out = &fout;
-   //fout.close();
-   //system("\"C:/Program Files/Notepad++/notepad++.exe\" kek.txt");
-   //std::cout << "\ntest\n";
-
    cin.get();
 }
 // ------------------------------------------------------
