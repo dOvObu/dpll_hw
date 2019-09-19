@@ -1,0 +1,35 @@
+
+DPLL (
+   Tseitin (
+      (!a or  b or  c) and
+      ( a or  c or  d) and
+      ( a or  c or !d) and
+      ( a or !c or  d) and
+      ( a or !c or !d) and
+      (!b or !c or  d) and
+      (!a or  b or !c) and
+      (!a or !b or  c)
+   )
+)
+
+
+DPLL (
+   Tseitin (
+      !(!(p and q) => !r)
+   )
+)
+
+
+DPLL (
+   Tseitin (
+      ((p => q) => (!q => !p)) and ((!q => !p) => (p => q))
+   )
+)
+
+
+DPLL (
+   Tseitin (
+      ((p => (q => r))    => (!r => (!q => !p))) and
+      ((!r => (!q => !p)) => (p => (q => r)))
+   )
+)
