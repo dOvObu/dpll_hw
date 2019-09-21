@@ -50,15 +50,6 @@ struct parser {
       stop,
       unknown,
    };
-   vec<state> s{ state::unknown };
-
-   enum class action {
-      add_class,
-      add_func,
-      add_stmt,
-      add_expr,
-      wait,
-   };
 
    enum class assoc { left, right };
 
@@ -78,31 +69,31 @@ struct parser {
    };
 
    struct stacks_of_par_context {
-      vector<expr*>                 stack_of_expressions;
-      vector<stmt*>                 stack_of_statements;
-      vector<operator_and_priority> stack_of_operators;
-      vector<call_and_depth>        stack_of_calls;
+      vec<expr*>                 stack_of_expressions;
+      vec<stmt*>                 stack_of_statements;
+      vec<operator_and_priority> stack_of_operators;
+      vec<call_and_depth>        stack_of_calls;
 
       void swapWith(parser* parser)
       {
-         swap(parser->stack_of_expressions, stack_of_expressions);
-         swap(parser->stack_of_statements, stack_of_statements);
-         swap(parser->stack_of_operators, stack_of_operators);
-         swap(parser->stack_of_calls, stack_of_calls);
+         swap(parser->stack_of_expressions , stack_of_expressions);
+         swap(parser->stack_of_statements  , stack_of_statements );
+         swap(parser->stack_of_operators   , stack_of_operators  );
+         swap(parser->stack_of_calls       , stack_of_calls      );
       }
    };
 
-   vector<action> log;
-   int depth = 0;
-   int stepDepth = 5;
-   vector<tok>                   stack_of_one_expr_bfr_first_tok;
-   vector<int>                   stack_of_one_expr_depths;
-   vector<size_t>                stack_of_one_expr_num_of_exprs;
-   vector<stmt*>                 stack_of_statements;
-   vector<expr*>                 stack_of_expressions;
-   vector<operator_and_priority> stack_of_operators;
-   vector<call_and_depth>        stack_of_calls;
-   vector<stacks_of_par_context> stack_of_parentheses;
+   vec<state>                 s{ state::unknown };
+   vec<tok>                   stack_of_one_expr_bfr_first_tok;
+   vec<int>                   stack_of_one_expr_depths;
+   vec<size_t>                stack_of_one_expr_num_of_exprs;
+   vec<stmt*>                 stack_of_statements;
+   vec<expr*>                 stack_of_expressions;
+   vec<operator_and_priority> stack_of_operators;
+   vec<call_and_depth>        stack_of_calls;
+   vec<stacks_of_par_context> stack_of_parentheses;
+   int depth{ 0 };
+   const int stepDepth{ 5 };
 
    stmt* addStmt(stmt* s);
    expr* addExpr(expr* e);
@@ -114,51 +105,53 @@ struct parser {
    template <typename T> void addUnOperatorTmpl(tok type, const vec<token>& t, size_t& idx);
    template <typename T> void evalLastOperatorToExprTmpl();
    template <typename T> void evalLastUnOperatorToExprTmpl();
-   void addOperator(tok type);
-   void evalLastOperatorToExpr();
-   void evalLastUnOperatorToExpr();
-   bool hasStateInHistory(state state);
-   void goBackInHistoryTo(state state);
-   int  getPriorityFor(tok type);
-   assoc getAssociativityFor(tok type);
+
    size_t freezeParDepthScore{ 0 };
    size_t freezeClsPar{ 0 };
    size_t freezeEolExprStmtScore{ 0 };
-   void freezeParDepthHandlerForOneStep();
-   void freezeEolExprStmtHandlerForOneStep();
-   bool conditionToStopParsingOneExpr(const vec<token>& t, size_t & idx);
-   void unloadExprsToStmts();
+
+   void   addOperator(tok type);
+   void   evalLastOperatorToExpr();
+   void   evalLastUnOperatorToExpr();
+   bool   hasStateInHistory(state state);
+   void   goBackInHistoryTo(state state);
+   int    getPriorityFor(tok type);
+   assoc  getAssociativityFor(tok type);
+   void   freezeParDepthHandlerForOneStep();
+   void   freezeEolExprStmtHandlerForOneStep();
+   bool   conditionToStopParsingOneExpr(const vec<token>& t, size_t & idx);
+   void   unloadExprsToStmts();
 
    void  setState(state state);
    state getCurrentState();
    state popState();
 
-   void parseStmt(const vec<token>& tokens, size_t& idx);
-   void parseBreak(const vec<token>& tokens, size_t& idx);
-   void parseReturn(const vec<token>& tokens, size_t& idx);
-   void parseContinue(const vec<token>& tokens, size_t& idx);
-   void parseBody(const vec<token>& tokens, size_t& idx);
-   void parseAssign(const vec<token>& tokens, size_t& idx);
-   void parseMapa(const vec<token>& tokens, size_t& idx);
-   void parseStmtExpr(const vec<token>& tokens, size_t& idx);
-   void parseExpr(const vec<token>& tokens, size_t& idx);
-   void parseLambda(const vec<token>& tokens, size_t& idx);
-   void parseOpnPar(const vec<token>& tokens, size_t& idx);
-   void parseClsPar(const vec<token>& tokens, size_t& idx);
-   void parseOperator(const vec<token>& tokens, size_t& idx);
-   void parseNum(const vec<token>& tokens, size_t& idx);
-   void parseId(const vec<token>& tokens, size_t& idx);
-   void parseVar(const vec<token>& tokens, size_t& idx);
-   void parseStr(const vec<token>& tokens, size_t& idx);
-   void parseFunc(const vec<token>& tokens, size_t& idx);
-   void parseCall(const vec<token>& tokens, size_t& idx);
-   void parseWhile(const vec<token>& tokens, size_t& idx);
-   void parseIf(const vec<token>& tokens, size_t& idx);
-   void parseIfel(const vec<token>& tokens, size_t& idx);
-   void parseForEach(const vec<token>& tokens, size_t& idx);
-   void parseFor(const vec<token>& tokens, size_t& idx);
-   void parseStruct(const vec<token>& tokens, size_t& idx);
-   void parseOneExpr(const vec<token>& tokens, size_t& idx);
+   void parseStmt       (const vec<token>& tokens, size_t& idx);
+   void parseBreak      (const vec<token>& tokens, size_t& idx);
+   void parseReturn     (const vec<token>& tokens, size_t& idx);
+   void parseContinue   (const vec<token>& tokens, size_t& idx);
+   void parseBody       (const vec<token>& tokens, size_t& idx);
+   void parseAssign     (const vec<token>& tokens, size_t& idx);
+   void parseMapa       (const vec<token>& tokens, size_t& idx);
+   void parseStmtExpr   (const vec<token>& tokens, size_t& idx);
+   void parseExpr       (const vec<token>& tokens, size_t& idx);
+   void parseLambda     (const vec<token>& tokens, size_t& idx);
+   void parseOpnPar     (const vec<token>& tokens, size_t& idx);
+   void parseClsPar     (const vec<token>& tokens, size_t& idx);
+   void parseOperator   (const vec<token>& tokens, size_t& idx);
+   void parseNum        (const vec<token>& tokens, size_t& idx);
+   void parseId         (const vec<token>& tokens, size_t& idx);
+   void parseVar        (const vec<token>& tokens, size_t& idx);
+   void parseStr        (const vec<token>& tokens, size_t& idx);
+   void parseFunc       (const vec<token>& tokens, size_t& idx);
+   void parseCall       (const vec<token>& tokens, size_t& idx);
+   void parseWhile      (const vec<token>& tokens, size_t& idx);
+   void parseIf         (const vec<token>& tokens, size_t& idx);
+   void parseIfel       (const vec<token>& tokens, size_t& idx);
+   void parseForEach    (const vec<token>& tokens, size_t& idx);
+   void parseFor        (const vec<token>& tokens, size_t& idx);
+   void parseStruct     (const vec<token>& tokens, size_t& idx);
+   void parseOneExpr    (const vec<token>& tokens, size_t& idx);
    void parsePlaceholder(size_t& idx);
 
    void parse(const vec<token>& tokens);
