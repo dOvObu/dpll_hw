@@ -162,4 +162,4 @@ private:
    vis_expr_type expert;
 };
 
-#endif // ifndef VIS_EQUALITY_H
+#endif // VIS_EQUALITY_H
