@@ -179,3 +179,4 @@ STRUCT::STRUCT(string _id, STRUCT* _parent, const vec<assign*>& _fields, const v
       for (auto& v : _parent->fields)  if (v != nullptr && !fieldIds.count(v->id))  fields.push_back(v);
    }
 }
+

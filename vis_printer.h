@@ -56,7 +56,6 @@ struct printer : public vis_base {
    void enter(STRUCT     *p) { *out << "struct " << p->id; if (p->parent != nullptr) *out << " : " << p->parent->id; *out << " {" << endl; addtab(); for (auto& it : p->fields) it->enter(this); if (!p->fields.empty()) *out << endl; for (auto& it : p->methods) it->enter(this); poptab(); *out << tabs << "}" << endl; }
 };
 
-
 static void showExprPool()
 {
    printer writer;
@@ -68,7 +67,6 @@ static void showExprPool()
    cout << "-----------------" << endl;
 }
 
-
 static void showStmtPool()
 {
    printer writer;
@@ -79,30 +77,4 @@ static void showStmtPool()
    }
    cout << "-----------------" << endl;
 }
-
-
-static void show_contents_of_pool()
-{
-   printer writer;
-
-   if (structPool.empty()) {
-      if (funcPool.empty()) {
-         if (stmtPool.empty()) {
-            if (!exprPool.empty()) {
-               showExprPool();
-            }
-         }
-         else { showStmtPool(); }
-      }
-      else { for (auto& it : funcPool) it->enter(&writer); }
-   }
-   else { structPool.back()->enter(&writer); }
-
-   cout
-      << "\n struct:" << structPool.size()
-      << "\n func:\t" << funcPool.size()
-      << "\n stmt:\t" << stmtPool.size()
-      << "\n expr:\t" << exprPool.size()
-      << endl;
-}
-#endif // VIS_PRINTER
+#endif
