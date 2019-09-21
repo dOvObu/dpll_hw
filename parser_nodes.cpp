@@ -1,95 +1,39 @@
 #include "parser_nodes.h"
 
-vec<stmt_ptr> stmtPool;
-vec<expr_ptr> exprPool;
-vec<func_ptr> funcPool;
+vec<stmt_ptr>   stmtPool  ;
+vec<expr_ptr>   exprPool  ;
+vec<func_ptr>   funcPool  ;
 vec<struct_ptr> structPool;
-
 // ------------------------------------------------------
-add::add(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
+#define put_bin_op_constructor(name) name::name(expr* _l, expr* _r) : l(_l), r(_r) { if (l != nullptr) exprPool.push_back(expr_ptr(l)); if (r != nullptr) exprPool.push_back(expr_ptr(r)); }
+put_bin_op_constructor(add)
+put_bin_op_constructor(dif)
+put_bin_op_constructor(mul)
+put_bin_op_constructor(sep)
+put_bin_op_constructor(dot)
+put_bin_op_constructor(col)
+put_bin_op_constructor(therefore)
+put_bin_op_constructor(_or)
+put_bin_op_constructor(_and)
+put_bin_op_constructor(more)
+put_bin_op_constructor(_less)
+put_bin_op_constructor(more_eq)
+put_bin_op_constructor(less_eq)
+put_bin_op_constructor(_equal)
+#undef put_bin_op_constructor
+;
 
-dif::dif(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
 
-mul::mul(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-
-sep::sep(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-
-dot::dot(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-
-col::col(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-
-therefore::therefore(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-_or::_or(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-_and::_and(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-more::more(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-_less::_less(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-more_eq::more_eq(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-less_eq::less_eq(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
-_equal::_equal(expr* _l, expr* _r) : l(_l), r(_r)
-{
-   if (_l != nullptr) exprPool.push_back(expr_ptr(l));
-   if (_r != nullptr) exprPool.push_back(expr_ptr(r));
-}
 _not::_not(expr* _r) : r(_r)
 {
    if (_r != nullptr) exprPool.push_back(expr_ptr(r));
 }
+
 un_dif::un_dif(expr* _r) : r(_r)
 {
    if (_r != nullptr) exprPool.push_back(expr_ptr(r));
 }
+
 un_add::un_add(expr* _r) : r(_r)
 {
    if (_r != nullptr) exprPool.push_back(expr_ptr(r));
@@ -179,4 +123,3 @@ STRUCT::STRUCT(string _id, STRUCT* _parent, const vec<assign*>& _fields, const v
       for (auto& v : _parent->fields)  if (v != nullptr && !fieldIds.count(v->id))  fields.push_back(v);
    }
 }
-
