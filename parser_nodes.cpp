@@ -30,11 +30,13 @@ put_un_op_constructor(un_add)
 #undef put_un_op_constructor
 
 
-call::call(expr* _id, const vec<expr*>& _args) : id(_id), args(_args)
+call::call(expr* _id, const vec<expr*>& _args)
+   : id(_id), args(_args)
 {
    if (_id != nullptr) exprPool.push_back(expr_ptr(_id));
    for (auto& arg : args) if (arg != nullptr) exprPool.push_back(expr_ptr(arg));
 }
+
 
 ifel::ifel(expr* _cond, expr* _l, expr* _r)
    : cond(_cond), l(_l), r(_r)
@@ -43,6 +45,7 @@ ifel::ifel(expr* _cond, expr* _l, expr* _r)
    if (_l    != nullptr) exprPool.push_back(expr_ptr(_l   ));
    if (_r    != nullptr) exprPool.push_back(expr_ptr(_r   ));
 }
+
 
 for_each_::for_each_(var* _idx, var* _val, expr* _src, expr* _cond, expr* _modif)
    : idx(_idx), val(_val), src(_src), cond(_cond), modif(_modif)
@@ -54,6 +57,7 @@ for_each_::for_each_(var* _idx, var* _val, expr* _src, expr* _cond, expr* _modif
    if (_modif != nullptr) exprPool.push_back(expr_ptr(_modif));
 }
 
+
 for_ch::for_ch(var* _idx, var* _val, expr* _src, expr* _cond, stmt* _body)
    : idx(_idx), val(_val), src(_src), cond(_cond), body(_body)
 {
@@ -64,6 +68,7 @@ for_ch::for_ch(var* _idx, var* _val, expr* _src, expr* _cond, stmt* _body)
    if (_body != nullptr) stmtPool.push_back(stmt_ptr(_body));
 }
 
+
 if_else::if_else(expr* _cond, stmt* _success, stmt* _fail)
    : cond(_cond), success(_success), fail(_fail)
 {
@@ -72,6 +77,7 @@ if_else::if_else(expr* _cond, stmt* _success, stmt* _fail)
    if (_fail    != nullptr) stmtPool.push_back(stmt_ptr(_fail   ));
 }
 
+
 while_loop::while_loop(expr* _cond, stmt* _body)
    : cond(_cond), body(_body)
 {
@@ -79,11 +85,13 @@ while_loop::while_loop(expr* _cond, stmt* _body)
    if (_body != nullptr) stmtPool.push_back(stmt_ptr(_body));
 }
 
+
 func::func(string _id, const vec<expr*>& _argsId, body* __body)
    : id(_id), argsId(_argsId), _body(__body)
 {
    if (_body != nullptr) for (auto& s : _body->stmts) if (s != nullptr) stmtPool.push_back(stmt_ptr(s));
 }
+
 
 lam::lam(const vec<expr*>& _argsId, stmt* _s)
    : argsId(_argsId), s(_s)

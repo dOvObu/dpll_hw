@@ -6,8 +6,6 @@
 #include <memory>
 #include <set>
 
-#include <FlexLexer.h>
-
 #include "vis_base.h"
 #include "vis_exec.h"
 #include "parser_nodes.h"
