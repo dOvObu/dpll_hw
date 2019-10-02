@@ -14,41 +14,41 @@
 using namespace std;
 
 
-struct vis_dpll : public vis_walker {
+struct VIS_DPLL : public VIS_WALKER {
 
    ostream* out = &cout;
-   set<set<expr*>> CNF;
+   set<set<EXPR*>> CNF;
    map<string, int> _M;
    bool res      = false;
    bool _SAT_    = false;
    bool _UNSAT_  = false;
 
-   void exec(set<set<expr*>> _CNF);
+   void exec(set<set<EXPR*>> _CNF);
 
 // ==----- OVERRIDES -----==
 
-   void enter(_not* p) override;
-   void enter(var*  p) override;
-   void enter(num*  p) override;
+   void enter(NOT* p) override;
+   void enter(VAR*  p) override;
+   void enter(NUM*  p) override;
 
 // ==----- PRIVATE ------==
 private:
-   bool _dpll(set<set<expr*>> S, map<string, int> M);
+   bool _dpll(set<set<EXPR*>> S, map<string, int> M);
 
-   set<set<expr*>> unit_propagate(set<set<expr*>> S, map<string, int>& M);
-   set<set<expr*>> eliminate_pure_literal(set<set<expr*>> s, map<string, int>& M);
-   set<expr*>      rm_contrar_lit(set<expr*> C);
-   string          select_lit(set<set<expr*>>& S, map<string, int>& M);
+   set<set<EXPR*>> unit_propagate(set<set<EXPR*>> S, map<string, int>& M);
+   set<set<EXPR*>> eliminate_pure_literal(set<set<EXPR*>> s, map<string, int>& M);
+   set<EXPR*>      rm_contrar_lit(set<EXPR*> C);
+   string          select_lit(set<set<EXPR*>>& S, map<string, int>& M);
 
-   string get_id_of_lit(expr* p);
+   string get_id_of_lit(EXPR* p);
 
-   int  get_res(expr* p, map<string, int>& M);
-   bool is_positive(expr *p);
+   int  get_res(EXPR* p, map<string, int>& M);
+   bool is_positive(EXPR *p);
    void clear_interpretation(map<string, int>& M);
-   bool is_sat(set<set<expr*>>& S, map<string, int>& M);
-   bool is_unsat(set<set<expr*>>& S);
+   bool is_sat(set<set<EXPR*>>& S, map<string, int>& M);
+   bool is_unsat(set<set<EXPR*>>& S);
    void show_interpretation(map<string, int>& M);
-   void show_cnf(set<set<expr*>>& S);
+   void show_cnf(set<set<EXPR*>>& S);
    void show_cnf();
 };
 

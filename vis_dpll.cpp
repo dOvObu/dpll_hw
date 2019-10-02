@@ -1,13 +1,13 @@
 #include "vis_dpll.h"
 
 
-void vis_dpll::exec(set<set<expr*>> _CNF)
+void VIS_DPLL::exec(set<set<EXPR*>> _CNF)
 {
    CNF = _CNF;
    map<string, int> M;
    clear_interpretation(M);
 
-   set<set<expr*>> cnf;
+   set<set<EXPR*>> cnf;
    for (auto& C : CNF) {
       auto c = rm_contrar_lit(C);
 
@@ -23,7 +23,7 @@ void vis_dpll::exec(set<set<expr*>> _CNF)
    CNF.clear();
 }
 // ==----- OVERRIDES -----==
-void vis_dpll::enter(_not* p)
+void VIS_DPLL::enter(NOT* p)
 {
    if (p->r != nullptr) {
       p->r->enter(this);
@@ -32,28 +32,28 @@ void vis_dpll::enter(_not* p)
 }
 
 
-void vis_dpll::enter(var* p)
+void VIS_DPLL::enter(VAR* p)
 {
    res = _M[p->id];
 }
 
 
-void vis_dpll::enter(num* p)
+void VIS_DPLL::enter(NUM* p)
 {
    res = p->n;
 }
 // ==----- PRIVATE ------==
-bool vis_dpll::_dpll(set<set<expr*>> S, map<string, int> M)
+bool VIS_DPLL::_dpll(set<set<EXPR*>> S, map<string, int> M)
 {
    string Id = select_lit(S, M);
 
-   set<set<expr*>>  _S = S;
+   set<set<EXPR*>>  _S = S;
    map<string, int> _M = M;
 
    if (is_sat(S, M)) { return true; }
    if (is_unsat(S)) { return false; }
 
-   set<set<expr*>> s;
+   set<set<EXPR*>> s;
 
    while (s != S) {
       s = unit_propagate(S, M);
@@ -78,16 +78,16 @@ bool vis_dpll::_dpll(set<set<expr*>> S, map<string, int> M)
 }
 
 
-set<set<expr*>> vis_dpll::unit_propagate(set<set<expr*>> S, map<string, int>& M)
+set<set<EXPR*>> VIS_DPLL::unit_propagate(set<set<EXPR*>> S, map<string, int>& M)
 {
-   set<set<expr*>> s;
+   set<set<EXPR*>> s;
 
    for (auto& C : S) {
 
       bool emplace_c = true;
 
       if (C.size() == 1) {
-         expr* l = *begin(C);
+         EXPR* l = *begin(C);
          string id = get_id_of_lit(l);
 
          if (M[id] == -1) {
@@ -95,7 +95,7 @@ set<set<expr*>> vis_dpll::unit_propagate(set<set<expr*>> S, map<string, int>& M)
          }
       }
 
-      set<expr*> c;
+      set<EXPR*> c;
 
       for (auto& l : C) {
          bool emplace_l = true;
@@ -124,7 +124,7 @@ set<set<expr*>> vis_dpll::unit_propagate(set<set<expr*>> S, map<string, int>& M)
 #define was_positive first
 #define was_negative second
 
-set<set<expr*>> vis_dpll::eliminate_pure_literal(set<set<expr*>> s, map<string, int>& M)
+set<set<EXPR*>> VIS_DPLL::eliminate_pure_literal(set<set<EXPR*>> s, map<string, int>& M)
 {
    map<string, pair<bool, bool>> p;
 
@@ -140,10 +140,10 @@ set<set<expr*>> vis_dpll::eliminate_pure_literal(set<set<expr*>> s, map<string, 
       }
    }
 
-   set<set<expr*>> S;
+   set<set<EXPR*>> S;
 
    for (auto& C : s) {
-      set<expr*> c;
+      set<EXPR*> c;
       for (auto& l : C) {
          bool emplace_l = false;
 
@@ -166,7 +166,7 @@ set<set<expr*>> vis_dpll::eliminate_pure_literal(set<set<expr*>> s, map<string, 
 }
 
 
-set<expr*> vis_dpll::rm_contrar_lit(set<expr*> C)
+set<EXPR*> VIS_DPLL::rm_contrar_lit(set<EXPR*> C)
 {
    map<string, pair<bool, bool>> M;
 
@@ -177,7 +177,7 @@ set<expr*> vis_dpll::rm_contrar_lit(set<expr*> C)
       was = true;
    }
 
-   set<expr*> c;
+   set<EXPR*> c;
    for (auto& l : C) {
       string id = get_id_of_lit(l);
       if (!M[id].was_positive || !M[id].was_negative) {
@@ -191,7 +191,7 @@ set<expr*> vis_dpll::rm_contrar_lit(set<expr*> C)
 #undef was_positive
 #undef was_negative
 
-string vis_dpll::select_lit(set<set<expr*>>& S, map<string, int>& M)
+string VIS_DPLL::select_lit(set<set<EXPR*>>& S, map<string, int>& M)
 {
    for (auto& C : S) {
 
@@ -209,18 +209,18 @@ string vis_dpll::select_lit(set<set<expr*>>& S, map<string, int>& M)
 }
 
 
-string vis_dpll::get_id_of_lit(expr* p)
+string VIS_DPLL::get_id_of_lit(EXPR* p)
 {
    if (is_positive(p)) {
-      return ((var*)p)->id;
+      return ((VAR*)p)->id;
    }
    else {
-      return ((var*)((_not*)p)->r)->id;
+      return ((VAR*)((NOT*)p)->r)->id;
    }
 }
 
 
-int vis_dpll::get_res(expr* p, map<string, int>& M)
+int VIS_DPLL::get_res(EXPR* p, map<string, int>& M)
 {
    _M = M;
    p->enter(this);
@@ -229,33 +229,33 @@ int vis_dpll::get_res(expr* p, map<string, int>& M)
 }
 
 
-bool vis_dpll::is_positive(expr *p)
+bool VIS_DPLL::is_positive(EXPR *p)
 {
-   vis_expr_type expert;
+   VIS_EXPR_TYPE expert;
 
-   return expert.get_type_of(p) != tok::_not;
+   return expert.get_type_of(p) != TOK::_not;
 }
 
 
-void vis_dpll::clear_interpretation(map<string, int>& M)
+void VIS_DPLL::clear_interpretation(map<string, int>& M)
 {
    M.clear();
    for (auto& C : CNF) {
       for (auto& l : C) {
-         vis_expr_type expert;
+         VIS_EXPR_TYPE expert;
 
-         if (expert.get_type_of(l) == tok::_not) {
-            M[((var*)((_not*)l)->r)->id] = -1;
+         if (expert.get_type_of(l) == TOK::_not) {
+            M[((VAR*)((NOT*)l)->r)->id] = -1;
          }
          else {
-            M[((var*)l)->id] = -1;
+            M[((VAR*)l)->id] = -1;
          }
       }
    }
 }
 
 
-bool vis_dpll::is_sat(set<set<expr*>>& S, map<string, int>& M)
+bool VIS_DPLL::is_sat(set<set<EXPR*>>& S, map<string, int>& M)
 {
    if (S.empty()) {
       if (!_SAT_) show_interpretation(M);
@@ -266,7 +266,7 @@ bool vis_dpll::is_sat(set<set<expr*>>& S, map<string, int>& M)
 }
 
 
-bool vis_dpll::is_unsat(set<set<expr*>>& S)
+bool VIS_DPLL::is_unsat(set<set<EXPR*>>& S)
 {
    for (auto& C : S) {
       if (C.empty()) {
@@ -279,7 +279,7 @@ bool vis_dpll::is_unsat(set<set<expr*>>& S)
 }
 
 
-void vis_dpll::show_interpretation(map<string, int>& M)
+void VIS_DPLL::show_interpretation(map<string, int>& M)
 {
    cout << "==----- Interp: -----==\n";
    for (auto& m : M) {
@@ -291,7 +291,7 @@ void vis_dpll::show_interpretation(map<string, int>& M)
 }
 
 
-void vis_dpll::show_cnf(set<set<expr*>>& S)
+void VIS_DPLL::show_cnf(set<set<EXPR*>>& S)
 {
    swap(S, CNF);
    show_cnf();
@@ -299,11 +299,11 @@ void vis_dpll::show_cnf(set<set<expr*>>& S)
 }
 
 
-void vis_dpll::show_cnf()
+void VIS_DPLL::show_cnf()
 {
    *out << "\n\n ==---- CNF ----== \n";
    bool first1 = true, first2 = true;
-   printer writer;
+   VIS_PRINTER writer;
 
    for (auto& it : CNF) {
 

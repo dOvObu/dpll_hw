@@ -8,7 +8,7 @@
 
 using namespace std;
 
-struct printer : public vis_base {
+struct VIS_PRINTER : public VIS_BASE {
    ostream* out = &cout;
    string tabs = "";
    string tab = "   ";
@@ -17,42 +17,42 @@ struct printer : public vis_base {
    void addtab();
    void poptab();
 
-   void enter(var        *p);
-   void enter(num        *p);
-   void enter(str        *p);
-   void enter(seq        *p);
-   void enter(add        *p);
-   void enter(dif        *p);
-   void enter(mul        *p);
-   void enter(sep        *p);
-   void enter(dot        *p);
-   void enter(col        *p);
-   void enter(therefore  *p);
-   void enter(_or        *p);
-   void enter(_and       *p);
-   void enter(more       *p);
-   void enter(_less      *p);
-   void enter(more_eq    *p);
-   void enter(less_eq    *p);
-   void enter(_equal     *p);
-   void enter(_not       *p);
-   void enter(un_dif     *p);
-   void enter(un_add     *p);
-   void enter(call       *p);
-   void enter(ifel       *p);
-   void enter(for_ch     *p);
-   void enter(for_each_  *p);
-   void enter(if_else    *p);
-   void enter(while_loop *p);
-   void enter(mapa       *p);
-   void enter(assign     *p);
-   void enter(body       *p);
-   void enter(ret        *p);
-   void enter(_break     *p);
-   void enter(_continue  *p);
-   void enter(assert     *p);
-   void enter(func       *p);
-   void enter(lam        *p);
+   void enter(VAR        *p);
+   void enter(NUM        *p);
+   void enter(STR        *p);
+   void enter(SEQ        *p);
+   void enter(ADD        *p);
+   void enter(DIF        *p);
+   void enter(MUL        *p);
+   void enter(SEP        *p);
+   void enter(DOT        *p);
+   void enter(COL        *p);
+   void enter(THEREFORE  *p);
+   void enter(OR        *p);
+   void enter(AND       *p);
+   void enter(MORE       *p);
+   void enter(LESS      *p);
+   void enter(MORE_EQ    *p);
+   void enter(LESS_EQ    *p);
+   void enter(EQUAL     *p);
+   void enter(NOT       *p);
+   void enter(UN_DIF     *p);
+   void enter(UN_ADD     *p);
+   void enter(CALL       *p);
+   void enter(IFEL       *p);
+   void enter(FOR_CH     *p);
+   void enter(FOR_EACH  *p);
+   void enter(IF_ELSE    *p);
+   void enter(WHILE_LOOP *p);
+   void enter(MAPA       *p);
+   void enter(ASSIGN     *p);
+   void enter(BODY       *p);
+   void enter(RET        *p);
+   void enter(BREAK     *p);
+   void enter(CONTINUE  *p);
+   void enter(ASSERT     *p);
+   void enter(FUNC       *p);
+   void enter(LAM        *p);
    void enter(STRUCT     *p);
 };
 

@@ -1,7 +1,7 @@
 #include "tokens.h"
 
-std::set<tok> operators{ tok::pluss, tok::minus, tok::divide, tok::multiply, tok::dot, tok::colon, tok::more, tok::more_eq, tok::less, tok::less_eq, tok::equal, tok::therefore, tok::_and, tok::_or, tok::_not };
-std::set<tok> un_operators{ tok::un_minus, tok::un_pluss, tok::_not };
-std::set<tok> keyWords{ tok::_class, tok::_func, tok::_if, tok::_elif, tok::_else, tok::_while, tok::_assert, tok::_return, tok::_break, tok::_continue };
-std::set<tok> serviceSymbols{ tok::assign, tok::open_par, tok::close_par, tok::open_br, tok::comma, tok::close_br };
-std::vector<token> tokens;
+std::set<TOK> operators{ TOK::pluss, TOK::minus, TOK::divide, TOK::multiply, TOK::dot, TOK::colon, TOK::more, TOK::more_eq, TOK::less, TOK::less_eq, TOK::equal, TOK::therefore, TOK::_and, TOK::_or, TOK::_not };
+std::set<TOK> un_operators{ TOK::un_minus, TOK::un_pluss, TOK::_not };
+std::set<TOK> keyWords{ TOK::_class, TOK::_func, TOK::_if, TOK::_elif, TOK::_else, TOK::_while, TOK::_assert, TOK::_return, TOK::_break, TOK::_continue };
+std::set<TOK> serviceSymbols{ TOK::assign, TOK::open_par, TOK::close_par, TOK::open_br, TOK::comma, TOK::close_br };
+std::vector<TOKEN> tokens;

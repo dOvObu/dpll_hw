@@ -1,16 +1,16 @@
 #include "vis_exec.h"
 
 
-void exec::exec_tseitin(vec<expr*>& args)
+void VIS_EXEC::exec_tseitin(VEC<EXPR*>& args)
 {
    if (!args.empty()) {
 
-      tseitin f;
-      vis_expr_type expert;
+      VIS_TSEITIN f;
+      VIS_EXPR_TYPE expert;
 
       for (auto& it : args) {
          if (it != nullptr) {
-            if (expert.get_type_of(it) == tok::therefore) {
+            if (expert.get_type_of(it) == TOK::therefore) {
                f.change_therefore_to_or(it);
             }
             it->enter(&f);
@@ -18,23 +18,23 @@ void exec::exec_tseitin(vec<expr*>& args)
       }
       CNF = f.CNF;
 
-      tok type = expert.get_type_of(args.back());
-      set<expr*> c;
+      TOK type = expert.get_type_of(args.back());
+      set<EXPR*> c;
       simplify_cnf();
 
-      if (type == tok::_not) {
+      if (type == TOK::_not) {
          c.emplace(args.back());
 
-      } else if (type == tok::_and) {
-         _and* node = (_and*)args.back();
+      } else if (type == TOK::_and) {
+         AND* node = (AND*)args.back();
 
          c.emplace(node->l);
          CNF.emplace(c);
          c.clear();
          c.emplace(node->r);
 
-      } else if (type == tok::_or) {
-         _or* node = (_or*)args.back();
+      } else if (type == TOK::_or) {
+         OR* node = (OR*)args.back();
 
          c.emplace(node->l);
          c.emplace(node->r);
@@ -47,21 +47,21 @@ void exec::exec_tseitin(vec<expr*>& args)
 }
 
 
-void exec::simplify_cnf(bool rm_garbage)
+void VIS_EXEC::simplify_cnf(bool rm_garbage)
 {
-   vis_equality expert;
-   _not n1(nullptr), n2(nullptr), *not_not = &n1;
+   VIS_EQUALITY expert;
+   NOT n1(nullptr), n2(nullptr), *not_not = &n1;
    n1.r = &n2;
-   set<set<expr*>> cnf;
-   vec<expr*> garbage;
+   set<set<EXPR*>> cnf;
+   VEC<EXPR*> garbage;
 
    for (auto& it : CNF) {
-      set<expr*> df;
+      set<EXPR*> df;
       for (auto& jt : it) {
-         expr* lit = jt;
+         EXPR* lit = jt;
          while (expert.is_in(not_not, lit)) {
-            _not* nt = (_not*)lit;
-            _not* nnt = (_not*)nt->r;
+            NOT* nt = (NOT*)lit;
+            NOT* nnt = (NOT*)nt->r;
             lit = nnt->r;
             garbage.push_back(nt);
          }
@@ -80,7 +80,7 @@ void exec::simplify_cnf(bool rm_garbage)
    CNF = cnf;
 }
 // ==----- OVERRIDES -----==
-void exec::enter(therefore* p)
+void VIS_EXEC::enter(THEREFORE* p)
 {
    if (p->l != nullptr) {
       p->l->enter(this);
@@ -91,7 +91,7 @@ void exec::enter(therefore* p)
 }
 
 
-void exec::enter(_or* p)
+void VIS_EXEC::enter(OR* p)
 {
    if (p->l != nullptr) {
       p->l->enter(this);
@@ -102,7 +102,7 @@ void exec::enter(_or* p)
 }
 
 
-void exec::enter(_and* p)
+void VIS_EXEC::enter(AND* p)
 {
    if (p->l != nullptr) {
       p->l->enter(this);
@@ -113,7 +113,7 @@ void exec::enter(_and* p)
 }
 
 
-void exec::enter(_not* p)
+void VIS_EXEC::enter(NOT* p)
 {
    if (p->r != nullptr) {
       p->r->enter(this);
@@ -122,7 +122,7 @@ void exec::enter(_not* p)
 }
 
 
-void exec::enter(var* p)
+void VIS_EXEC::enter(VAR* p)
 {
    if (is_call) {
       _tseitin = (p->id == "Tseitin");
@@ -136,9 +136,9 @@ void exec::enter(var* p)
 }
 
 
-void exec::enter(call* p)
+void VIS_EXEC::enter(CALL* p)
 {
-   vis_walker::enter(p);
+   VIS_WALKER::enter(p);
 
    is_call = true;
 
@@ -155,17 +155,17 @@ void exec::enter(call* p)
 
    if (_dpll) {
       _dpll = false;
-      vis_dpll expert;
+      VIS_DPLL expert;
       expert.exec(CNF);
    }
 }
 
 
-void exec::show_cnf()
+void VIS_EXEC::show_cnf()
 {
    *out << "\n\n ==---- CNF ----== \n";
    bool first1 = true, first2 = true;
-   printer writer;
+   VIS_PRINTER writer;
 
    for (auto& it : CNF) {
 

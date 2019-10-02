@@ -15,9 +15,9 @@
 
 using namespace std;
 
-struct exec : public vis_walker {
+struct VIS_EXEC : public VIS_WALKER {
    ostream* out = &cout;
-   set<set<expr*>> CNF;
+   set<set<EXPR*>> CNF;
    map<string, int> M;
    bool res      { false };
    bool is_call  { false };
@@ -25,15 +25,15 @@ struct exec : public vis_walker {
    bool _dpll    { false };
    bool _SAT_    { false };
 
-   void exec_tseitin(vec<expr*>& args);
+   void exec_tseitin(VEC<EXPR*>& args);
    void simplify_cnf(bool rm_garbage = true);
 
-   void enter(therefore *p) override;
-   void enter(_or       *p) override;
-   void enter(_and      *p) override;
-   void enter(_not      *p) override;
-   void enter(var       *p) override;
-   void enter(call      *p) override;
+   void enter(THEREFORE *p) override;
+   void enter(OR       *p) override;
+   void enter(AND      *p) override;
+   void enter(NOT      *p) override;
+   void enter(VAR       *p) override;
+   void enter(CALL      *p) override;
 private:
    void show_cnf();
 };

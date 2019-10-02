@@ -3,7 +3,7 @@
 #include <set>
 #include <vector>
 
-enum class tok {
+enum class TOK {
    num_lit, str_lit,
    id,
 
@@ -16,20 +16,20 @@ enum class tok {
 
    space, comma, eof, unknown,
 };
-extern std::set<tok> operators;
-extern std::set<tok> un_operators;
-extern std::set<tok> keyWords;
-extern std::set<tok> serviceSymbols;
+extern std::set<TOK> operators;
+extern std::set<TOK> un_operators;
+extern std::set<TOK> keyWords;
+extern std::set<TOK> serviceSymbols;
 
-struct token {
-   token(tok _tok) : tok(_tok) {}
-   token(tok _tok, int _int_val) : tok(_tok), int_val(_int_val) {}
-   token(tok _tok, std::string _str_val) : tok(_tok), str_val(_str_val) {}
-   tok tok{ tok::unknown };
+struct TOKEN {
+   TOKEN(TOK _tok) : tok(_tok) {}
+   TOKEN(TOK _tok, int _int_val) : tok(_tok), int_val(_int_val) {}
+   TOKEN(TOK _tok, std::string _str_val) : tok(_tok), str_val(_str_val) {}
+   TOK tok{ TOK::unknown };
    int int_val{ 0 };
    std::string str_val{ "" };
 };
 
-extern std::vector<token> tokens;
+extern std::vector<TOKEN> tokens;
 
 #endif // ifndef TOKENS_H

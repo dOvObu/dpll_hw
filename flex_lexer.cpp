@@ -675,8 +675,8 @@ case 2:
    YY_RULE_SETUP
    #line 9 "sample.l"
    {
-            if (!tokens.empty() && tokens.back().tok != tok::eol) {
-               tokens.push_back(tok::eol);
+            if (!tokens.empty() && tokens.back().tok != TOK::eol) {
+               tokens.push_back(TOK::eol);
             }
          }
       YY_BREAK
@@ -688,198 +688,198 @@ case 2:
    case 4:
    YY_RULE_SETUP
    #line 15 "sample.l"
-   { tokens.push_back({tok::num_lit, stoi(yytext)}); }
+   { tokens.push_back({TOK::num_lit, stoi(yytext)}); }
       YY_BREAK
    case 5:
       /* rule 5 can match eol */
       YY_RULE_SETUP
       #line 16 "sample.l"
-      { std::string s = yytext; tokens.push_back({tok::str_lit, s.substr(1,s.size() - 2)}); }
+      { std::string s = yytext; tokens.push_back({TOK::str_lit, s.substr(1,s.size() - 2)}); }
          YY_BREAK
       case 6:
       YY_RULE_SETUP
       #line 17 "sample.l"
-      {tokens.push_back(tok::pluss); }
+      {tokens.push_back(TOK::pluss); }
          YY_BREAK
       case 7:
       YY_RULE_SETUP
       #line 18 "sample.l"
-      {tokens.push_back(tok::minus); }
+      {tokens.push_back(TOK::minus); }
          YY_BREAK
       case 8:
       YY_RULE_SETUP
       #line 19 "sample.l"
-      {tokens.push_back(tok::multiply); }
+      {tokens.push_back(TOK::multiply); }
          YY_BREAK
       case 9:
       YY_RULE_SETUP
       #line 20 "sample.l"
-      {tokens.push_back(tok::divide); }
+      {tokens.push_back(TOK::divide); }
          YY_BREAK
       case 10:
       YY_RULE_SETUP
       #line 21 "sample.l"
-      {tokens.push_back(tok::dot); }
+      {tokens.push_back(TOK::dot); }
          YY_BREAK
       case 11:
       YY_RULE_SETUP
       #line 22 "sample.l"
-      {tokens.push_back(tok::therefore); }
+      {tokens.push_back(TOK::therefore); }
          YY_BREAK
       case 12:
       YY_RULE_SETUP
       #line 23 "sample.l"
-      {tokens.push_back(tok::_not); }
+      {tokens.push_back(TOK::_not); }
          YY_BREAK
       case 13:
       YY_RULE_SETUP
       #line 24 "sample.l"
-      {tokens.push_back(tok::more); }
+      {tokens.push_back(TOK::more); }
          YY_BREAK
       case 14:
       YY_RULE_SETUP
       #line 25 "sample.l"
-      {tokens.push_back(tok::less); }
+      {tokens.push_back(TOK::less); }
          YY_BREAK
       case 15:
       YY_RULE_SETUP
       #line 26 "sample.l"
-      {tokens.push_back(tok::more_eq); }
+      {tokens.push_back(TOK::more_eq); }
          YY_BREAK
       case 16:
       YY_RULE_SETUP
       #line 27 "sample.l"
-      {tokens.push_back(tok::less_eq); }
+      {tokens.push_back(TOK::less_eq); }
          YY_BREAK
       case 17:
       YY_RULE_SETUP
       #line 28 "sample.l"
-      {tokens.push_back(tok::equal); }
+      {tokens.push_back(TOK::equal); }
          YY_BREAK
       case 18:
       YY_RULE_SETUP
       #line 29 "sample.l"
-      {tokens.push_back(tok::open_par); }
+      {tokens.push_back(TOK::open_par); }
          YY_BREAK
       case 19:
       YY_RULE_SETUP
       #line 30 "sample.l"
-      {tokens.push_back(tok::close_par); }
+      {tokens.push_back(TOK::close_par); }
          YY_BREAK
       case 20:
       YY_RULE_SETUP
       #line 31 "sample.l"
-      {tokens.push_back(tok::open_br); }
+      {tokens.push_back(TOK::open_br); }
          YY_BREAK
       case 21:
       YY_RULE_SETUP
       #line 32 "sample.l"
-      {if (tokens.back().tok != tok::eol) tokens.push_back(tok::eol); tokens.push_back(tok::close_br); }
+      {if (tokens.back().tok != TOK::eol) tokens.push_back(TOK::eol); tokens.push_back(TOK::close_br); }
          YY_BREAK
       case 22:
       YY_RULE_SETUP
       #line 33 "sample.l"
-      {tokens.push_back(tok::_class); }
+      {tokens.push_back(TOK::_class); }
          YY_BREAK
       case 23:
       YY_RULE_SETUP
       #line 34 "sample.l"
-      {tokens.push_back(tok::_if); }
+      {tokens.push_back(TOK::_if); }
          YY_BREAK
       case 24:
       YY_RULE_SETUP
       #line 35 "sample.l"
-      {if (!tokens.empty() && tokens.back().tok != tok::eol) tokens.push_back(tok::eol); tokens.push_back(tok::_else); }
+      {if (!tokens.empty() && tokens.back().tok != TOK::eol) tokens.push_back(TOK::eol); tokens.push_back(TOK::_else); }
          YY_BREAK
       case 25:
       YY_RULE_SETUP
       #line 36 "sample.l"
-      {if (!tokens.empty() && tokens.back().tok != tok::eol) tokens.push_back(tok::eol); tokens.push_back(tok::_elif); }
+      {if (!tokens.empty() && tokens.back().tok != TOK::eol) tokens.push_back(TOK::eol); tokens.push_back(TOK::_elif); }
          YY_BREAK
       case 26:
       YY_RULE_SETUP
       #line 37 "sample.l"
-      {tokens.push_back(tok::_while); }
+      {tokens.push_back(TOK::_while); }
          YY_BREAK
       case 27:
       YY_RULE_SETUP
       #line 38 "sample.l"
-      {tokens.push_back(tok::_for); }
+      {tokens.push_back(TOK::_for); }
          YY_BREAK
       case 28:
       YY_RULE_SETUP
       #line 39 "sample.l"
-      {tokens.push_back(tok::_return); }
+      {tokens.push_back(TOK::_return); }
          YY_BREAK
       case 29:
       YY_RULE_SETUP
       #line 40 "sample.l"
-      {tokens.push_back(tok::_assert); }
+      {tokens.push_back(TOK::_assert); }
          YY_BREAK
       case 30:
       YY_RULE_SETUP
       #line 41 "sample.l"
-      {tokens.push_back(tok::_break); }
+      {tokens.push_back(TOK::_break); }
          YY_BREAK
       case 31:
       YY_RULE_SETUP
       #line 42 "sample.l"
-      {tokens.push_back(tok::_continue); }
+      {tokens.push_back(TOK::_continue); }
          YY_BREAK
       case 32:
       YY_RULE_SETUP
       #line 43 "sample.l"
-      {tokens.push_back(tok::_func); }
+      {tokens.push_back(TOK::_func); }
          YY_BREAK
       case 33:
       YY_RULE_SETUP
       #line 44 "sample.l"
-      {tokens.push_back(tok::lam); }
+      {tokens.push_back(TOK::lam); }
          YY_BREAK
       case 34:
       YY_RULE_SETUP
       #line 45 "sample.l"
-      {tokens.push_back(tok::_or); }
+      {tokens.push_back(TOK::_or); }
          YY_BREAK
       case 35:
       YY_RULE_SETUP
       #line 46 "sample.l"
-      {tokens.push_back(tok::_or); }
+      {tokens.push_back(TOK::_or); }
          YY_BREAK
       case 36:
       YY_RULE_SETUP
       #line 47 "sample.l"
-      {tokens.push_back(tok::_and); }
+      {tokens.push_back(TOK::_and); }
          YY_BREAK
       case 37:
       YY_RULE_SETUP
       #line 48 "sample.l"
-      {tokens.push_back(tok::_and); }
+      {tokens.push_back(TOK::_and); }
          YY_BREAK
       case 38:
       YY_RULE_SETUP
       #line 49 "sample.l"
-      { tokens.push_back(tok::comma); tokens.push_back(tok::_where); tokens.push_back(tok::comma); }
+      { tokens.push_back(TOK::comma); tokens.push_back(TOK::_where); tokens.push_back(TOK::comma); }
          YY_BREAK
       case 39:
       YY_RULE_SETUP
       #line 50 "sample.l"
-      {tokens.push_back(tok::assign); }
+      {tokens.push_back(TOK::assign); }
          YY_BREAK
       case 40:
       YY_RULE_SETUP
       #line 51 "sample.l"
-      {tokens.push_back(tok::colon); }
+      {tokens.push_back(TOK::colon); }
          YY_BREAK
       case 41:
       YY_RULE_SETUP
       #line 52 "sample.l"
-      {tokens.push_back(tok::comma); }
+      {tokens.push_back(TOK::comma); }
          YY_BREAK
       case 42:
       YY_RULE_SETUP
       #line 53 "sample.l"
-      { tokens.push_back({tok::id, yytext}); }
+      { tokens.push_back({TOK::id, yytext}); }
          YY_BREAK
       case 43:
       YY_RULE_SETUP

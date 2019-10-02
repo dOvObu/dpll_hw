@@ -5,77 +5,77 @@ using namespace std;
 #define prew t[idx - 1]
 
 
-void parser::parse(const vec<token>& t)
+void PARSER::parse(const VEC<TOKEN>& t)
 {
-   for (size_t idx = 0; idx < t.size() - 1 && curr.tok != tok::eof; ++idx) {
+   for (size_t idx = 0; idx < t.size() - 1 && curr.tok != TOK::eof; ++idx) {
       switchStateTo(getCurrentState(), t, idx);
    }
 }
 
 
-void parser::switchStateTo(state currentState, const vec<token>& t, size_t& idx)
+void PARSER::switchStateTo(STATE currentState, const VEC<TOKEN>& t, size_t& idx)
 {
    switch (currentState) {
-   case state::prs_stmt:                   parseStmt(t, idx);      break;
-   case state::prs_break:                  parseBreak(t, idx);     break;
-   case state::prs_return:                 parseReturn(t, idx);    break;
-   case state::prs_body:                   parseBody(t, idx);      break;
-   case state::prs_continue:               parseContinue(t, idx);  break;
-   case state::prs_assign:                 parseAssign(t, idx);    break;
-   case state::prs_mapa:                   parseMapa(t, idx);      break;
-   case state::prs_stmt_expr:              parseStmtExpr(t, idx);  break;
-   case state::prs_one_expr:               parseOneExpr(t, idx);   break;
-   case state::prs_lam:                    parseLambda(t, idx);    break;
-   case state::prs_operator:               parseOperator(t, idx);  break;
-   case state::prs_num:                    parseNum(t, idx);       break;
-   case state::prs_id:                     parseId(t, idx);        break;
-   case state::prs_var:                    parseVar(t, idx);       break;
-   case state::prs_str:                    parseStr(t, idx);       break;
-   case state::prs_func:                   parseFunc(t, idx);      break;
-   case state::prs_call:                   parseCall(t, idx);      break;
-   case state::prs_while:                  parseWhile(t, idx);     break;
-   case state::prs_if:                     parseIf(t, idx);        break;
-   case state::prs_ifel:                   parseIfel(t, idx);      break;
-   case state::prs_for:                    parseFor(t, idx);       break;
-   case state::prs_forch:                  parseForEach(t, idx);   break;
-   case state::prs_pholdr:                 parsePlaceholder(idx);  break;
-   case state::prs_expr_before_first_call:
-   case state::prs_expr:                   parseExpr(t, idx);      break;
+   case STATE::prs_stmt:                   parseStmt(t, idx);      break;
+   case STATE::prs_break:                  parseBreak(t, idx);     break;
+   case STATE::prs_return:                 parseReturn(t, idx);    break;
+   case STATE::prs_body:                   parseBody(t, idx);      break;
+   case STATE::prs_continue:               parseContinue(t, idx);  break;
+   case STATE::prs_assign:                 parseAssign(t, idx);    break;
+   case STATE::prs_mapa:                   parseMapa(t, idx);      break;
+   case STATE::prs_stmt_expr:              parseStmtExpr(t, idx);  break;
+   case STATE::prs_one_expr:               parseOneExpr(t, idx);   break;
+   case STATE::prs_lam:                    parseLambda(t, idx);    break;
+   case STATE::prs_operator:               parseOperator(t, idx);  break;
+   case STATE::prs_num:                    parseNum(t, idx);       break;
+   case STATE::prs_id:                     parseId(t, idx);        break;
+   case STATE::prs_var:                    parseVar(t, idx);       break;
+   case STATE::prs_str:                    parseStr(t, idx);       break;
+   case STATE::prs_func:                   parseFunc(t, idx);      break;
+   case STATE::prs_call:                   parseCall(t, idx);      break;
+   case STATE::prs_while:                  parseWhile(t, idx);     break;
+   case STATE::prs_if:                     parseIf(t, idx);        break;
+   case STATE::prs_ifel:                   parseIfel(t, idx);      break;
+   case STATE::prs_for:                    parseFor(t, idx);       break;
+   case STATE::prs_forch:                  parseForEach(t, idx);   break;
+   case STATE::prs_pholdr:                 parsePlaceholder(idx);  break;
+   case STATE::prs_expr_before_first_call:
+   case STATE::prs_expr:                   parseExpr(t, idx);      break;
    default: break;
    }
 }
 // ------------------------------------- parser's tools
-int parser::getPriorityFor(tok type)
+int PARSER::getPriorityFor(TOK type)
 {
    int priority{ 0 };
 
-        if (type == tok::colon                             ) priority = 10;
-   else if (type == tok::dot                               ) priority =  9;
-   else if (type == tok::_not     || type == tok::un_pluss
-      ||    type == tok::un_minus                          ) priority =  8;
-   else if (type == tok::multiply || type == tok::divide   ) priority =  7;
-   else if (type == tok::pluss    || type == tok::minus    ) priority =  6;
-   else if (type == tok::less     || type == tok::more
-      ||    type == tok::less_eq  || type == tok::more_eq  ) priority =  5;
-   else if (type == tok::equal                             ) priority =  4;
-   else if (type == tok::therefore                         ) priority =  3;
-   else if (type == tok::_and                              ) priority =  2;
-   else if (type == tok::_or                               ) priority =  1;
+        if (type == TOK::colon                             ) priority = 10;
+   else if (type == TOK::dot                               ) priority =  9;
+   else if (type == TOK::_not     || type == TOK::un_pluss
+      ||    type == TOK::un_minus                          ) priority =  8;
+   else if (type == TOK::multiply || type == TOK::divide   ) priority =  7;
+   else if (type == TOK::pluss    || type == TOK::minus    ) priority =  6;
+   else if (type == TOK::less     || type == TOK::more
+      ||    type == TOK::less_eq  || type == TOK::more_eq  ) priority =  5;
+   else if (type == TOK::equal                             ) priority =  4;
+   else if (type == TOK::therefore                         ) priority =  3;
+   else if (type == TOK::_and                              ) priority =  2;
+   else if (type == TOK::_or                               ) priority =  1;
    
    priority += depth;
    return priority;
 }
 
 
-parser::assoc parser::getAssociativityFor(tok type)
+PARSER::ASSOC PARSER::getAssociativityFor(TOK type)
 {
-   assoc assoc{ assoc::left };
-   if (type == tok::colon || type == tok::_not) assoc = assoc::right;
-   return assoc;
+   ASSOC ASSOC{ ASSOC::left };
+   if (type == TOK::colon || type == TOK::_not) ASSOC = ASSOC::right;
+   return ASSOC;
 }
 
 
-bool parser::hasStateInHistory(parser::state _state)
+bool PARSER::hasStateInHistory(PARSER::STATE _state)
 {
    bool res = false;
    size_t i = s.size() - 1;
@@ -91,7 +91,7 @@ bool parser::hasStateInHistory(parser::state _state)
 }
 
 
-void parser::goBackInHistoryTo(parser::state _state)
+void PARSER::goBackInHistoryTo(PARSER::STATE _state)
 {
    while (true) {
       if (getCurrentState() == _state || s.empty()) break;
@@ -100,61 +100,61 @@ void parser::goBackInHistoryTo(parser::state _state)
 }
 
 
-void parser::addOperator(tok type)
+void PARSER::addOperator(TOK type)
 {
 #define tryWorkOnOp(_Token, _T) if (type == _Token) { addOperatorTmpl<_T>(type); }
-   tryWorkOnOp(tok::pluss     ,  add       )
-   tryWorkOnOp(tok::minus     ,  dif       )
-   tryWorkOnOp(tok::multiply  ,  mul       )
-   tryWorkOnOp(tok::divide    ,  sep       )
-   tryWorkOnOp(tok::dot       ,  dot       )
-   tryWorkOnOp(tok::colon     ,  col       )
-   tryWorkOnOp(tok::less      ,  _less     )
-   tryWorkOnOp(tok::more      ,  more      )
-   tryWorkOnOp(tok::less_eq   ,  less_eq   )
-   tryWorkOnOp(tok::more_eq   ,  more_eq   )
-   tryWorkOnOp(tok::equal     ,  _equal    )
-   tryWorkOnOp(tok::therefore ,  therefore )
-   tryWorkOnOp(tok::_and      ,  _and      )
-   tryWorkOnOp(tok::_or       ,  _or       )
+   tryWorkOnOp(TOK::pluss     ,  ADD       )
+   tryWorkOnOp(TOK::minus     ,  DIF       )
+   tryWorkOnOp(TOK::multiply  ,  MUL       )
+   tryWorkOnOp(TOK::divide    ,  SEP       )
+   tryWorkOnOp(TOK::dot       ,  DOT       )
+   tryWorkOnOp(TOK::colon     ,  COL       )
+   tryWorkOnOp(TOK::less      ,  LESS     )
+   tryWorkOnOp(TOK::more      ,  MORE      )
+   tryWorkOnOp(TOK::less_eq   ,  LESS_EQ   )
+   tryWorkOnOp(TOK::more_eq   ,  MORE_EQ   )
+   tryWorkOnOp(TOK::equal     ,  EQUAL    )
+   tryWorkOnOp(TOK::therefore ,  THEREFORE )
+   tryWorkOnOp(TOK::_and      ,  AND      )
+   tryWorkOnOp(TOK::_or       ,  OR       )
 #undef tryWorkOnOp
 }
 
 
-void parser::evalLastOperatorToExpr()
+void PARSER::evalLastOperatorToExpr()
 {
-   tok type = stack_of_operators.back().op.type;
+   TOK type = stack_of_operators.back().op.type;
    if (!stack_of_expressions.empty())
       if (stack_of_expressions.back() == nullptr || (stack_of_expressions.size() > 1 && stack_of_expressions[stack_of_expressions.size() - 2] == nullptr)) {
          cout << "\nevolution failed, becouse " << (stack_of_expressions.back() == nullptr ? "right" : "left") << " argument is nil\n";
          return;
       }
 #define tryWorkOnOp(_Token, _T) if (type == _Token) { evalLastOperatorToExprTmpl<_T>(); }
-   tryWorkOnOp(tok::pluss     ,  add       )
-   tryWorkOnOp(tok::minus     ,  dif       )
-   tryWorkOnOp(tok::multiply  ,  mul       )
-   tryWorkOnOp(tok::divide    ,  sep       )
-   tryWorkOnOp(tok::dot       ,  dot       )
-   tryWorkOnOp(tok::colon     ,  col       )
-   tryWorkOnOp(tok::less      ,  _less     )
-   tryWorkOnOp(tok::more      ,  more      )
-   tryWorkOnOp(tok::less_eq   ,  less_eq   )
-   tryWorkOnOp(tok::more_eq   ,  more_eq   )
-   tryWorkOnOp(tok::equal     ,  _equal    )
-   tryWorkOnOp(tok::therefore ,  therefore )
-   tryWorkOnOp(tok::_and      ,  _and      )
-   tryWorkOnOp(tok::_or       ,  _or       )
+   tryWorkOnOp(TOK::pluss     ,  ADD       )
+   tryWorkOnOp(TOK::minus     ,  DIF       )
+   tryWorkOnOp(TOK::multiply  ,  MUL       )
+   tryWorkOnOp(TOK::divide    ,  SEP       )
+   tryWorkOnOp(TOK::dot       ,  DOT       )
+   tryWorkOnOp(TOK::colon     ,  COL       )
+   tryWorkOnOp(TOK::less      ,  LESS     )
+   tryWorkOnOp(TOK::more      ,  MORE      )
+   tryWorkOnOp(TOK::less_eq   ,  LESS_EQ   )
+   tryWorkOnOp(TOK::more_eq   ,  MORE_EQ   )
+   tryWorkOnOp(TOK::equal     ,  EQUAL    )
+   tryWorkOnOp(TOK::therefore ,  THEREFORE )
+   tryWorkOnOp(TOK::_and      ,  AND      )
+   tryWorkOnOp(TOK::_or       ,  OR       )
 #undef tryWorkOnOp
-   printer writer;
+   VIS_PRINTER writer;
    cout << "\nafter last evolution of operator to expr:\n   ";
    stack_of_expressions.back()->enter(&writer);
    cout << endl;
 }
 
 
-void parser::evalLastUnOperatorToExpr()
+void PARSER::evalLastUnOperatorToExpr()
 {
-   tok type = stack_of_operators.back().op.type;
+   TOK type = stack_of_operators.back().op.type;
    if (!stack_of_one_expr_num_of_exprs.empty()) stack_of_one_expr_num_of_exprs.pop_back();
    if (!stack_of_expressions.empty())
       if (stack_of_expressions.back() == nullptr) {
@@ -162,66 +162,66 @@ void parser::evalLastUnOperatorToExpr()
          return;
       }
 #define tryWorkOnOp(_Token, _T) if (type == _Token) { evalLastUnOperatorToExprTmpl<_T>(); }
-      tryWorkOnOp(tok::un_pluss, un_add)
-      tryWorkOnOp(tok::un_minus, un_dif)
-      tryWorkOnOp(tok::_not, _not)
+      tryWorkOnOp(TOK::un_pluss, UN_ADD)
+      tryWorkOnOp(TOK::un_minus, UN_DIF)
+      tryWorkOnOp(TOK::_not, NOT)
 #undef tryWorkOnOp
-      printer writer;
+      VIS_PRINTER writer;
    cout << "\nafter last evolution of operator to expr:\n   ";
    stack_of_expressions.back()->enter(&writer);
    cout << endl;
 }
 
 
-stmt* parser::addStmt(stmt* s)
+STMT* PARSER::addStmt(STMT* s)
 {
-   stmtPool.push_back(stmt_ptr(s));
+   stmtPool.push_back(STMT_PTR(s));
    stack_of_statements.push_back(s);
    return s;
 }
 
 
-expr* parser::addExpr(expr* e)
+EXPR* PARSER::addExpr(EXPR* e)
 {
-   exprPool.push_back(expr_ptr(e));
+   exprPool.push_back(EXPR_PTR(e));
    stack_of_expressions.push_back(e);
    return e;
 }
 
 
-call* parser::addCall(call* c)
+CALL* PARSER::addCall(CALL* c)
 {
-   exprPool.push_back(expr_ptr(c));
+   exprPool.push_back(EXPR_PTR(c));
    stack_of_calls.push_back({ c, depth });
    return c;
 }
 
 
-void parser::addFunc(func* p)
+void PARSER::addFunc(FUNC* p)
 {
-   funcPool.push_back(func_ptr(p));
+   funcPool.push_back(FUNC_PTR(p));
 }
 
 
-void parser::addStruct(STRUCT* p)
+void PARSER::addStruct(STRUCT* p)
 {
-   structPool.push_back(struct_ptr(p));
+   structPool.push_back(STRUCT_PTR(p));
 }
 
 
-parser::state parser::getCurrentState()
+PARSER::STATE PARSER::getCurrentState()
 {
    return s.back();
 }
 
 
-void parser::setState(parser::state state)
+void PARSER::setState(PARSER::STATE state)
 {
    s.push_back(state);
 }
 
 
-parser::state parser::popState()
+PARSER::STATE PARSER::popState()
 {
    auto state = s.back();
    s.pop_back();
@@ -229,39 +229,39 @@ parser::state parser::popState()
 }
 
 
-void parser::parseStmt(const vec<token>& t, size_t& idx)
+void PARSER::parseStmt(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::eol) ++idx;
+   if (curr.tok == TOK::eol) ++idx;
 
-   if (curr.tok == tok::id) {
-      if (next.tok == tok::assign) {
+   if (curr.tok == TOK::id) {
+      if (next.tok == TOK::assign) {
          unloadExprsToStmts();
-         setState(stack_of_expressions.empty() ? state::prs_assign : state::prs_mapa);
+         setState(stack_of_expressions.empty() ? STATE::prs_assign : STATE::prs_mapa);
       }
-   } else if (curr.tok == tok::_break) {
+   } else if (curr.tok == TOK::_break) {
       unloadExprsToStmts();
-      setState(state::prs_break);
-   } else if (curr.tok == tok::_return) {
+      setState(STATE::prs_break);
+   } else if (curr.tok == TOK::_return) {
       unloadExprsToStmts();
-      setState(state::prs_return);
-   } else if (curr.tok == tok::_continue) {
+      setState(STATE::prs_return);
+   } else if (curr.tok == TOK::_continue) {
       unloadExprsToStmts();
-      setState(state::prs_continue);
-   } else if (curr.tok == tok::_if) {
+      setState(STATE::prs_continue);
+   } else if (curr.tok == TOK::_if) {
       unloadExprsToStmts();
-      setState(state::prs_if);
-   } else if (curr.tok == tok::_while) {
+      setState(STATE::prs_if);
+   } else if (curr.tok == TOK::_while) {
       unloadExprsToStmts();
-      setState(state::prs_while);
-   } else if (curr.tok == tok::_for) {
+      setState(STATE::prs_while);
+   } else if (curr.tok == TOK::_for) {
       unloadExprsToStmts();
       while (!stack_of_expressions.empty()) {
          stack_of_statements.push_back(stack_of_expressions.back());
          stack_of_expressions.pop_back();
       }
-      setState(state::prs_for);
+      setState(STATE::prs_for);
 
-   } else if (curr.tok == tok::_func || next.tok == tok::_func) {
+   } else if (curr.tok == TOK::_func || next.tok == TOK::_func) {
 
       while (!stack_of_expressions.empty()) {
          stack_of_statements.push_back(stack_of_expressions.back());
@@ -269,15 +269,15 @@ void parser::parseStmt(const vec<token>& t, size_t& idx)
          stack_of_expressions.pop_back();
       }
 
-      if (next.tok == tok::_func) ++idx;
-      setState(state::prs_func);
+      if (next.tok == TOK::_func) ++idx;
+      setState(STATE::prs_func);
    }
 
-   if (getCurrentState() == state::prs_stmt) {
-      if (curr.tok == tok::close_br || next.tok == tok::close_br) {
+   if (getCurrentState() == STATE::prs_stmt) {
+      if (curr.tok == TOK::close_br || next.tok == TOK::close_br) {
          popState();
       } else {
-         setState(state::prs_stmt_expr);
+         setState(STATE::prs_stmt_expr);
          idx = freezeEolExprStmtScore;
       }
    }
@@ -285,22 +285,22 @@ void parser::parseStmt(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseReturn(const vec<token>& t, size_t& idx)
+void PARSER::parseReturn(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::_return) {
-      setState(state::prs_expr);
-      addStmt(new ret(nullptr));
+   if (curr.tok == TOK::_return) {
+      setState(STATE::prs_expr);
+      addStmt(new RET(nullptr));
       --idx;
    } else {
       popState();
-      ret* r = (ret*)stack_of_statements.back();
+      RET* r = (RET*)stack_of_statements.back();
 
       if (stack_of_expressions.size() == 1) {
          r->e = stack_of_expressions.back();
          stack_of_expressions.clear();
       } else {
-         seq* sq;
-         r->e = addExpr(sq = new seq({}));
+         SEQ* sq;
+         r->e = addExpr(sq = new SEQ({}));
          stack_of_expressions.pop_back();
          swap(sq->s, stack_of_expressions);
       }
@@ -308,17 +308,17 @@ void parser::parseReturn(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseBreak(const vec<token>& t, size_t& idx)
+void PARSER::parseBreak(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::_break) {
-      setState(state::prs_expr);
-      addStmt(new _break(nullptr));
+   if (curr.tok == TOK::_break) {
+      setState(STATE::prs_expr);
+      addStmt(new BREAK(nullptr));
       --idx;
    } else {
       popState();
 
       if (!stack_of_expressions.empty()) {
-         ((_break*)stack_of_statements.back())->e = stack_of_expressions.back();
+         ((BREAK*)stack_of_statements.back())->e = stack_of_expressions.back();
 
          stack_of_expressions.pop_back();
       }
@@ -326,17 +326,17 @@ void parser::parseBreak(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseContinue(const vec<token>& t, size_t& idx)
+void PARSER::parseContinue(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::_continue) {
-      setState(state::prs_expr);
-      addStmt(new _continue(nullptr));
+   if (curr.tok == TOK::_continue) {
+      setState(STATE::prs_expr);
+      addStmt(new CONTINUE(nullptr));
       --idx;
    } else {
       popState();
 
       if (!stack_of_expressions.empty()) {
-         ((_continue*)stack_of_statements.back())->e = stack_of_expressions.back();
+         ((CONTINUE*)stack_of_statements.back())->e = stack_of_expressions.back();
 
          stack_of_expressions.pop_back();
       }
@@ -344,28 +344,28 @@ void parser::parseContinue(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseBody(const vec<token>& t, size_t & idx)
+void PARSER::parseBody(const VEC<TOKEN>& t, size_t & idx)
 {
-   if ((curr.tok == tok::eol && next.tok != tok::close_br) || curr.tok == tok::open_br) {
+   if ((curr.tok == TOK::eol && next.tok != TOK::close_br) || curr.tok == TOK::open_br) {
 
-      setState(state::prs_stmt);
+      setState(STATE::prs_stmt);
 
-      if (curr.tok != tok::open_br) --idx;
+      if (curr.tok != TOK::open_br) --idx;
       else freezeEolExprStmtScore = idx;
 
       return;
    }
 
-   if (next.tok == tok::close_br || curr.tok == tok::close_br) {
+   if (next.tok == TOK::close_br || curr.tok == TOK::close_br) {
 
-      if (curr.tok == tok::close_br) {
+      if (curr.tok == TOK::close_br) {
          freezeEolExprStmtScore = idx;
 
-         if (s.size() > 1 && s[s.size()-2] == state::prs_func) ++idx;
+         if (s.size() > 1 && s[s.size()-2] == STATE::prs_func) ++idx;
       }
-      body* body_ptr;
+      BODY* body_ptr;
 
-      stmtPool.push_back(stmt_ptr(body_ptr = new body({})));
+      stmtPool.push_back(STMT_PTR(body_ptr = new BODY({})));
       unloadExprsToStmts();
       swap(body_ptr->stmts, stack_of_statements);
       stack_of_statements.push_back(body_ptr);
@@ -375,23 +375,23 @@ void parser::parseBody(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::parseAssign(const vec<token>& t, size_t& idx)
+void PARSER::parseAssign(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (next.tok == tok::assign && curr.tok == tok::id) {
+   if (next.tok == TOK::assign && curr.tok == TOK::id) {
       unloadExprsToStmts();
-      addStmt(new assign(curr.str_val, nullptr));
-      setState(state::prs_expr);
+      addStmt(new ASSIGN(curr.str_val, nullptr));
+      setState(STATE::prs_expr);
 
-   } else if (curr.tok == tok::eol) {
-      assign* stmt = (assign*)(stack_of_statements.back());
+   } else if (curr.tok == TOK::eol) {
+      ASSIGN* stmt = (ASSIGN*)(stack_of_statements.back());
 
       if (stack_of_expressions.size() > 1) {
-         stmt->e = addExpr(new seq(stack_of_expressions));
+         stmt->e = addExpr(new SEQ(stack_of_expressions));
       } else {
          if (!stack_of_expressions.empty()) {
             stmt->e = stack_of_expressions[0];
          } else {
-            stmt->e = addExpr(new seq({}));
+            stmt->e = addExpr(new SEQ({}));
          }
       }
       stack_of_expressions.clear();
@@ -400,15 +400,15 @@ void parser::parseAssign(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseMapa(const vec<token>& t, size_t& idx)
+void PARSER::parseMapa(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (next.tok == tok::assign && !stack_of_expressions.empty()) {
-      mapa* ptr;
-      addStmt(ptr = new mapa(nullptr, nullptr));
+   if (next.tok == TOK::assign && !stack_of_expressions.empty()) {
+      MAPA* ptr;
+      addStmt(ptr = new MAPA(nullptr, nullptr));
 
       if (stack_of_expressions.size() > 1) {
-         seq* s;
-         ptr->id = addExpr(s = new seq({}));
+         SEQ* s;
+         ptr->id = addExpr(s = new SEQ({}));
 
          stack_of_expressions.pop_back();
          s->s = stack_of_expressions;
@@ -417,31 +417,31 @@ void parser::parseMapa(const vec<token>& t, size_t& idx)
       }
 
       stack_of_expressions.clear();
-      setState(state::prs_expr);
+      setState(STATE::prs_expr);
    }
 
-   if (curr.tok == tok::eol) {
-      mapa* stmt = (mapa*)(stack_of_statements.back());
+   if (curr.tok == TOK::eol) {
+      MAPA* stmt = (MAPA*)(stack_of_statements.back());
       stmt->e = stack_of_expressions.back();
 
       stack_of_expressions.pop_back();
       popState();
 
-      if (getCurrentState() == state::prs_stmt_expr) popState();
+      if (getCurrentState() == STATE::prs_stmt_expr) popState();
    }
 }
 
 
-void parser::parseStmtExpr(const vec<token>& t, size_t& idx)
+void PARSER::parseStmtExpr(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (stack_of_expressions.empty() && (freezeEolExprStmtScore == idx || curr.tok != tok::eol)) {
-      setState(state::prs_expr);
+   if (stack_of_expressions.empty() && (freezeEolExprStmtScore == idx || curr.tok != TOK::eol)) {
+      setState(STATE::prs_expr);
    } else {
       size_t size = stack_of_expressions.size();
 
       if (size > 1) {
-         seq* sq;
-         addStmt(sq = new seq({}));
+         SEQ* sq;
+         addStmt(sq = new SEQ({}));
          sq->s = stack_of_expressions;
       } else if (size == 1) {
          stack_of_statements.push_back(stack_of_expressions[0]);
@@ -454,19 +454,19 @@ void parser::parseStmtExpr(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseExpr(const vec<token>& t, size_t& idx)
+void PARSER::parseExpr(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::open_par) {
+   if (curr.tok == TOK::open_par) {
       parseOpnPar(t, idx);
-   } else if (curr.tok == tok::close_par && idx != freezeClsPar) {
+   } else if (curr.tok == TOK::close_par && idx != freezeClsPar) {
       parseClsPar(t, idx);
 
-      if (getCurrentState() == state::prs_expr_before_first_call) {
+      if (getCurrentState() == STATE::prs_expr_before_first_call) {
          popState();
 
          return;
       }
-   } else if (curr.tok == tok::eol && freezeEolExprStmtScore != idx){
+   } else if (curr.tok == TOK::eol && freezeEolExprStmtScore != idx){
 
       if (depth == 0 && !keyWords.count(prew.tok)) {
          popState();
@@ -480,7 +480,7 @@ void parser::parseExpr(const vec<token>& t, size_t& idx)
          }
          freezeEolExprStmtScore = idx;
 
-         if (getCurrentState() == state::prs_stmt_expr) {
+         if (getCurrentState() == STATE::prs_stmt_expr) {
             popState();
          }
          --idx;
@@ -488,43 +488,43 @@ void parser::parseExpr(const vec<token>& t, size_t& idx)
       }
    }
 
-   if (next.tok == tok::id) {
-      setState(state::prs_id);
-   } else if (next.tok == tok::num_lit) {
-      setState(state::prs_num);
-   } else if (next.tok == tok::str_lit) {
-      setState(state::prs_str);
-   } else if (next.tok == tok::lam) {
-      setState(state::prs_lam);
-   } else if (next.tok == tok::_if) {
-      setState(state::prs_ifel);
-   } else if (next.tok == tok::_for) {
-      setState(state::prs_forch);
-   } else if (next.tok == tok::_where) {
-      setState(state::prs_pholdr);
+   if (next.tok == TOK::id) {
+      setState(STATE::prs_id);
+   } else if (next.tok == TOK::num_lit) {
+      setState(STATE::prs_num);
+   } else if (next.tok == TOK::str_lit) {
+      setState(STATE::prs_str);
+   } else if (next.tok == TOK::lam) {
+      setState(STATE::prs_lam);
+   } else if (next.tok == TOK::_if) {
+      setState(STATE::prs_ifel);
+   } else if (next.tok == TOK::_for) {
+      setState(STATE::prs_forch);
+   } else if (next.tok == TOK::_where) {
+      setState(STATE::prs_pholdr);
    }
 
-   if (next.tok == tok::assign) {
+   if (next.tok == TOK::assign) {
       popState();
-      setState(state::prs_mapa);
+      setState(STATE::prs_mapa);
       --idx;
    }
 
    if (operators.count(next.tok)) {
-      setState(state::prs_operator);
+      setState(STATE::prs_operator);
    }
 
-   if ((next.tok == tok::comma && idx > 0 && operators.count(prew.tok)) && !stack_of_operators.empty()) {
+   if ((next.tok == TOK::comma && idx > 0 && operators.count(prew.tok)) && !stack_of_operators.empty()) {
       evalLastOperatorToExpr();
    }
 }
 
 
-void parser::parseOpnPar(const vec<token>& t, size_t& idx)
+void PARSER::parseOpnPar(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (idx > 0 && (prew.tok == tok::close_par || (prew.tok != tok::comma && prew.tok != tok::eol && !serviceSymbols.count(prew.tok) && !keyWords.count(prew.tok))) && !operators.count(prew.tok)) {
-      tok tok = prew.tok;
-      setState(state::prs_call);
+   if (idx > 0 && (prew.tok == TOK::close_par || (prew.tok != TOK::comma && prew.tok != TOK::eol && !serviceSymbols.count(prew.tok) && !keyWords.count(prew.tok))) && !operators.count(prew.tok)) {
+      TOK tok = prew.tok;
+      setState(STATE::prs_call);
       parseCall(t, idx);
    } else {
       stack_of_parentheses.push_back({ {},{},{},{} });
@@ -534,18 +534,18 @@ void parser::parseOpnPar(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseClsPar(const vec<token>& t, size_t& idx)
+void PARSER::parseClsPar(const VEC<TOKEN>& t, size_t& idx)
 {
    if (freezeClsPar != idx) {
       depth -= stepDepth;
 
-      if (s.size() < 2 || (s[s.size() - 2] == state::prs_call && !stack_of_calls.empty() && stack_of_calls.back().depth == depth)) {
+      if (s.size() < 2 || (s[s.size() - 2] == STATE::prs_call && !stack_of_calls.empty() && stack_of_calls.back().depth == depth)) {
 
          popState();
          parseCall(t, idx);
 
-         if (hasStateInHistory(state::prs_expr_before_first_call)) {
-            goBackInHistoryTo(state::prs_expr_before_first_call);
+         if (hasStateInHistory(STATE::prs_expr_before_first_call)) {
+            goBackInHistoryTo(STATE::prs_expr_before_first_call);
          }
       } else {
 
@@ -561,12 +561,12 @@ void parser::parseClsPar(const vec<token>& t, size_t& idx)
             // a list of free expr-s from parentheses is sequence
             if (stack_of_expressions.size() > 1) {
 
-               expr* expr = new seq(stack_of_expressions);
+               EXPR* expr = new SEQ(stack_of_expressions);
                addExpr(expr);
                stack_of_expressions.clear();
                stack_of_expressions.push_back(expr);
 
-               if (curr.tok == tok::close_par) freezeClsPar = idx;
+               if (curr.tok == TOK::close_par) freezeClsPar = idx;
             }
             // concatination of expr-s before and from parentheses
             auto& lastPar = stack_of_parentheses.back();
@@ -583,16 +583,16 @@ void parser::parseClsPar(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseOperator(const vec<token>& t, size_t& idx)
+void PARSER::parseOperator(const VEC<TOKEN>& t, size_t& idx)
 {
    popState();
 
    if (!stack_of_operators.empty() && !operators.count(prew.tok)) {
       const int& newPriority = getPriorityFor(curr.tok);
       const int& lastPriority = stack_of_operators.back().priority;
-      const auto& assoc = getAssociativityFor(curr.tok);
+      const auto& ASSOC = getAssociativityFor(curr.tok);
 
-      if (lastPriority > newPriority || (assoc == assoc::left && lastPriority == newPriority)) {
+      if (lastPriority > newPriority || (ASSOC == ASSOC::left && lastPriority == newPriority)) {
 
          if (stack_of_expressions.size() > 1 && !operators.count(prew.tok)) {
             evalLastOperatorToExpr();
@@ -602,11 +602,11 @@ void parser::parseOperator(const vec<token>& t, size_t& idx)
       }
    }
 
-   if (stack_of_expressions.size() < stack_of_operators.size() + 1 || prew.tok == tok::comma) {
+   if (stack_of_expressions.size() < stack_of_operators.size() + 1 || prew.tok == TOK::comma) {
 #define tryWorkOnOp(_Token, _Token2, _T) if (curr.tok == _Token) { addUnOperatorTmpl<_T>(_Token2, t, idx); }
-      tryWorkOnOp(tok::pluss , tok::un_pluss , un_add )
-      tryWorkOnOp(tok::minus , tok::un_minus , un_dif )
-      tryWorkOnOp(tok::_not  , tok::_not     , _not   )
+      tryWorkOnOp(TOK::pluss , TOK::un_pluss , UN_ADD )
+      tryWorkOnOp(TOK::minus , TOK::un_minus , UN_DIF )
+      tryWorkOnOp(TOK::_not  , TOK::_not     , NOT   )
 #undef tryWorkOnOp
    } else {
       addOperator(curr.tok);
@@ -616,82 +616,82 @@ void parser::parseOperator(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseNum(const vec<token>& t, size_t& idx)
+void PARSER::parseNum(const VEC<TOKEN>& t, size_t& idx)
 {
    popState();
-   addExpr(new num(curr.int_val));
+   addExpr(new NUM(curr.int_val));
    --idx;
 }
 
 
-void parser::parseId(const vec<token>& t, size_t& idx)
+void PARSER::parseId(const VEC<TOKEN>& t, size_t& idx)
 {
    popState();
-   setState(state::prs_var);
+   setState(STATE::prs_var);
    --idx;
 }
 
 
-void parser::parseVar(const vec<token>& t, size_t& idx)
+void PARSER::parseVar(const VEC<TOKEN>& t, size_t& idx)
 {
    popState();
-   addExpr(new var(curr.str_val));
+   addExpr(new VAR(curr.str_val));
    --idx;
 }
 
 
-void parser::parseStr(const vec<token>& t, size_t& idx)
+void PARSER::parseStr(const VEC<TOKEN>& t, size_t& idx)
 {
    popState();
-   addExpr(new str(curr.str_val));
+   addExpr(new STR(curr.str_val));
    --idx;
 }
 
 
-void parser::parseFunc(const vec<token>& t, size_t& idx)
+void PARSER::parseFunc(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::_func) {
-      setState(state::prs_expr_before_first_call);
+   if (curr.tok == TOK::_func) {
+      setState(STATE::prs_expr_before_first_call);
       --idx;
       return;
    }
 
-   if (curr.tok == tok::close_par || prew.tok == tok::close_par) {
+   if (curr.tok == TOK::close_par || prew.tok == TOK::close_par) {
 
-      call* seq_ptr = (call*)stack_of_expressions.back();
-      func* func_ptr;
+      CALL* seq_ptr = (CALL*)stack_of_expressions.back();
+      FUNC* func_ptr;
 
-      addFunc(func_ptr = new func(((var*)seq_ptr->id)->id, {}, nullptr));
+      addFunc(func_ptr = new FUNC(((VAR*)seq_ptr->id)->id, {}, nullptr));
       func_ptr->argsId = seq_ptr->args;
 
       rmExprFromPool(seq_ptr->id);
       stack_of_expressions.pop_back();
       rmExprFromPool(seq_ptr);
-      if (prew.tok == tok::close_par)  --idx;
+      if (prew.tok == TOK::close_par)  --idx;
 
-      while (next.tok != tok::open_br) ++idx;
+      while (next.tok != TOK::open_br) ++idx;
 
-      if (next.tok == tok::open_br) {
+      if (next.tok == TOK::open_br) {
          // while(a b){ stmt stmt stmt }
          //          ^
-         setState(state::prs_body);
+         setState(STATE::prs_body);
          size_t sizeOfTheStack = s.size();
 
-         vec<stmt*> stmt_buff{};
-         vec<expr*> expr_buff{};
+         VEC<STMT*> stmt_buff{};
+         VEC<EXPR*> expr_buff{};
 
          swap(stmt_buff, stack_of_statements);
          swap(expr_buff, stack_of_expressions);
 
-         vec<operator_and_priority> op_buff;
-         vec<call_and_depth>        call_buff;
-         vec<stacks_of_par_context> par_buff;
+         VEC<OPERATOR_AND_PRIORITY> op_buff;
+         VEC<CALL_AND_DEPTH>        call_buff;
+         VEC<STACK_OF_PAR_CONTEXT> par_buff;
 
          swap(op_buff, stack_of_operators);
          swap(call_buff, stack_of_calls);
          swap(par_buff, stack_of_parentheses);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_body) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_body) {
             ++idx;
 
             switchStateTo(getCurrentState(), t, idx);
@@ -701,7 +701,7 @@ void parser::parseFunc(const vec<token>& t, size_t& idx)
          swap(call_buff, stack_of_calls);
          swap(par_buff, stack_of_parentheses);
 
-         func_ptr->_body = (body*)stack_of_statements.back();
+         func_ptr->_body = (BODY*)stack_of_statements.back();
          stack_of_statements.pop_back();
 
          swap(stmt_buff, stack_of_statements);
@@ -714,19 +714,19 @@ void parser::parseFunc(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseCall(const vec<token>& t, size_t& idx)
+void PARSER::parseCall(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::open_par) {
-      addCall(new call(nullptr, {}));
+   if (curr.tok == TOK::open_par) {
+      addCall(new CALL(nullptr, {}));
       stack_of_calls.back().call->id = stack_of_expressions.back();
       stack_of_expressions.pop_back();
       swap(stack_of_calls.back().call->args, stack_of_expressions);
       swap(stack_of_calls.back().stack_of_operators, stack_of_operators);
-      setState(state::prs_expr);
+      setState(STATE::prs_expr);
       return;
    }
 
-   if (curr.tok == tok::close_par) {
+   if (curr.tok == TOK::close_par) {
       popState();
       while (!stack_of_operators.empty()) {
          if (un_operators.count(stack_of_operators.back().op.type)) {
@@ -747,58 +747,58 @@ void parser::parseCall(const vec<token>& t, size_t& idx)
 }
 
 
-void parser::parseForEach(const vec<token>& t, size_t& idx)
+void PARSER::parseForEach(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::_for) {
-      addExpr(new for_each_(nullptr, nullptr, nullptr, nullptr, nullptr));
-      setState(state::prs_expr_before_first_call);
+   if (curr.tok == TOK::_for) {
+      addExpr(new FOR_EACH(nullptr, nullptr, nullptr, nullptr, nullptr));
+      setState(STATE::prs_expr_before_first_call);
       return;
    }
 
-   if (curr.tok == tok::close_par) {
-      call*      seq_ptr = (call*)stack_of_expressions.back();
+   if (curr.tok == TOK::close_par) {
+      CALL*      seq_ptr = (CALL*)stack_of_expressions.back();
 
-      for_each_* for_ptr = (for_each_*)seq_ptr->id;
+      FOR_EACH* for_ptr = (FOR_EACH*)seq_ptr->id;
       int        variant = seq_ptr->args.size();
-      col*       op;
+      COL*       op;
 
       if (variant == 1) {
-         op = (col*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[0];
 
       } else if (variant == 2) {
-         for_ptr->idx = (var*)seq_ptr->args[0];
-         op = (col*)seq_ptr->args[1];
+         for_ptr->idx = (VAR*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[1];
 
       } else if (variant == 3) {
-         op = (col*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[0];
          for_ptr->cond = seq_ptr->args[2];
 
       } else if (variant == 4) {
-         for_ptr->idx = (var*)seq_ptr->args[0];
-         op = (col*)seq_ptr->args[1];
+         for_ptr->idx = (VAR*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[1];
          for_ptr->cond = seq_ptr->args[3];
 
       } else {
          abort();
       }
       
-      for_ptr->val = (var*)op->l;
+      for_ptr->val = (VAR*)op->l;
       for_ptr->src = op->r;
 
       stack_of_expressions.back() = for_ptr;
       rmExprFromPool(seq_ptr);
 
-      if (next.tok == tok::dot) {
+      if (next.tok == TOK::dot) {
          // for(i x :Y | pred).expr
          //                  ^
-         setState(state::prs_one_expr);
+         setState(STATE::prs_one_expr);
          size_t sizeOfTheStack = s.size();
          {
-            vec<expr*>                 buff{};
-            vec<operator_and_priority> op_buff;
-            vec<call_and_depth>        call_buff;
-            vec<stacks_of_par_context> par_buff;
-            vec<size_t>                num_of_exprs_buff;
+            VEC<EXPR*>                 buff{};
+            VEC<OPERATOR_AND_PRIORITY> op_buff;
+            VEC<CALL_AND_DEPTH>        call_buff;
+            VEC<STACK_OF_PAR_CONTEXT> par_buff;
+            VEC<size_t>                num_of_exprs_buff;
 
             num_of_exprs_buff.push_back(0);
             swap(buff, stack_of_expressions);
@@ -808,7 +808,7 @@ void parser::parseForEach(const vec<token>& t, size_t& idx)
             swap(num_of_exprs_buff, stack_of_one_expr_num_of_exprs);
 
             stack_of_one_expr_depths.push_back(depth);
-            while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_one_expr) {
+            while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_one_expr) {
                ++idx;
 
                switchStateTo(getCurrentState(), t, idx);
@@ -817,8 +817,8 @@ void parser::parseForEach(const vec<token>& t, size_t& idx)
             if (stack_of_expressions.size() == 1) {
                for_ptr->modif = stack_of_expressions[0];
             } else {
-               seq* seq_ptr;
-               for_ptr->modif = addExpr(seq_ptr = new seq({}));
+               SEQ* seq_ptr;
+               for_ptr->modif = addExpr(seq_ptr = new SEQ({}));
                stack_of_expressions.pop_back();
                seq_ptr->s = stack_of_expressions;
             }
@@ -836,13 +836,13 @@ void parser::parseForEach(const vec<token>& t, size_t& idx)
       }
       freezeParDepthHandlerForOneStep();
 
-      if (t[idx + 1].tok == tok::close_par) freezeClsPar = idx + 1;
+      if (t[idx + 1].tok == TOK::close_par) freezeClsPar = idx + 1;
       popState();
    }
 }
 
 
-void parser::parseStruct(const vec<token>& t, size_t & idx)
+void PARSER::parseStruct(const VEC<TOKEN>& t, size_t & idx)
 {
    /*
    if (curr.tok == tok::_class) {
@@ -917,67 +917,67 @@ void parser::parseStruct(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::parseFor(const vec<token>& t, size_t& idx)
+void PARSER::parseFor(const VEC<TOKEN>& t, size_t& idx)
 {
-   if (curr.tok == tok::_for) {
-      addExpr(new for_each_(nullptr, nullptr, nullptr, nullptr, nullptr));
-      setState(state::prs_expr_before_first_call);
+   if (curr.tok == TOK::_for) {
+      addExpr(new FOR_EACH(nullptr, nullptr, nullptr, nullptr, nullptr));
+      setState(STATE::prs_expr_before_first_call);
       return;
    }
 
-   if (curr.tok == tok::close_par) {
-      call* seq_ptr = (call*)stack_of_expressions.back();
+   if (curr.tok == TOK::close_par) {
+      CALL* seq_ptr = (CALL*)stack_of_expressions.back();
       rmExprFromPool(seq_ptr->id);
 
-      for_ch* for_ptr;
-      addStmt(for_ptr = new for_ch(nullptr, nullptr, nullptr, nullptr, nullptr));
+      FOR_CH* for_ptr;
+      addStmt(for_ptr = new FOR_CH(nullptr, nullptr, nullptr, nullptr, nullptr));
 
       int  variant = seq_ptr->args.size();
-      col* op;
+      COL* op;
 
       if (variant == 1) {
-         op = (col*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[0];
       } else if (variant == 2) {
-         for_ptr->idx = (var*)seq_ptr->args[0];
-         op = (col*)seq_ptr->args[1];
+         for_ptr->idx = (VAR*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[1];
       } else if (variant == 3) {
-         op = (col*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[0];
          for_ptr->cond = seq_ptr->args[2];
       } else if (variant == 4) {
-         for_ptr->idx = (var*)seq_ptr->args[0];
-         op = (col*)seq_ptr->args[1];
+         for_ptr->idx = (VAR*)seq_ptr->args[0];
+         op = (COL*)seq_ptr->args[1];
          for_ptr->cond = seq_ptr->args[3];
       } else {
          abort();
       }
 
-      for_ptr->val = (var*)op->l;
+      for_ptr->val = (VAR*)op->l;
       for_ptr->src = op->r;
       
       stack_of_expressions.pop_back();
       rmExprFromPool(seq_ptr);
 
-      if (next.tok == tok::open_br) {
+      if (next.tok == TOK::open_br) {
          // while(a b){ stmt stmt stmt }
          //          ^
-         setState(state::prs_body);
+         setState(STATE::prs_body);
          size_t sizeOfTheStack = s.size();
 
-         vec<stmt*> stmt_buff{};
-         vec<expr*> expr_buff{};
+         VEC<STMT*> stmt_buff{};
+         VEC<EXPR*> expr_buff{};
 
          swap(stmt_buff, stack_of_statements);
          swap(expr_buff, stack_of_expressions);
 
-         vec<operator_and_priority> op_buff;
-         vec<call_and_depth>        call_buff;
-         vec<stacks_of_par_context> par_buff;
+         VEC<OPERATOR_AND_PRIORITY> op_buff;
+         VEC<CALL_AND_DEPTH>        call_buff;
+         VEC<STACK_OF_PAR_CONTEXT> par_buff;
 
          swap(op_buff, stack_of_operators);
          swap(call_buff, stack_of_calls);
          swap(par_buff, stack_of_parentheses);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_body) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_body) {
             ++idx;
             switchStateTo(getCurrentState(), t, idx);
          }
@@ -996,7 +996,7 @@ void parser::parseFor(const vec<token>& t, size_t& idx)
    }
 }
 
-bool parser::conditionToStopParsingOneExpr(const vec<token>& t, size_t & idx)
+bool PARSER::conditionToStopParsingOneExpr(const VEC<TOKEN>& t, size_t & idx)
 {
    bool needsToStop = false;
    bool mayStop =
@@ -1007,18 +1007,18 @@ bool parser::conditionToStopParsingOneExpr(const vec<token>& t, size_t & idx)
 
    if (mayStop) {
 
-      if (next.tok == tok::eol) {
+      if (next.tok == TOK::eol) {
          needsToStop = !keyWords.count(prew.tok);
       }
 
-      if (next.tok != tok::open_par) {
+      if (next.tok != TOK::open_par) {
          needsToStop = !stack_of_expressions.empty();
 
          if (needsToStop && !stack_of_one_expr_bfr_first_tok.empty()) {
 
             while (!stack_of_operators.empty()) {
 
-               if (stack_of_operators.size() == 1 && stack_of_operators.back().op.type == tok::colon) {
+               if (stack_of_operators.size() == 1 && stack_of_operators.back().op.type == TOK::colon) {
                   break;
                }
                if (un_operators.count(stack_of_operators.back().op.type)) {
@@ -1034,18 +1034,18 @@ bool parser::conditionToStopParsingOneExpr(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::parseOneExpr(const vec<token>& t, size_t & idx)
+void PARSER::parseOneExpr(const VEC<TOKEN>& t, size_t & idx)
 {
 
-   if (curr.tok == tok::open_par) {
+   if (curr.tok == TOK::open_par) {
       parseOpnPar(t, idx);
-   } else if (curr.tok == tok::close_par) {
+   } else if (curr.tok == TOK::close_par) {
       parseClsPar(t, idx);
    }
 
    if (conditionToStopParsingOneExpr(t, idx)) {
       popState();
-      if (curr.tok == tok::eol) {
+      if (curr.tok == TOK::eol) {
          freezeEolExprStmtScore = idx;
       }
 
@@ -1058,33 +1058,33 @@ void parser::parseOneExpr(const vec<token>& t, size_t & idx)
       return;
    }
 
-   if (next.tok == tok::id) {
-      setState(state::prs_id);
-   } else if (next.tok == tok::num_lit) {
-      setState(state::prs_num);
-   } else if (next.tok == tok::str_lit) {
-      setState(state::prs_str);
-   } else if (next.tok == tok::lam) {
-      setState(state::prs_lam);
-   } else if (next.tok == tok::_if) {
-      setState(state::prs_ifel);
-   } else if (next.tok == tok::_for) {
-      setState(state::prs_forch);
-   } else if (next.tok == tok::_where) {
-      setState(state::prs_pholdr);
+   if (next.tok == TOK::id) {
+      setState(STATE::prs_id);
+   } else if (next.tok == TOK::num_lit) {
+      setState(STATE::prs_num);
+   } else if (next.tok == TOK::str_lit) {
+      setState(STATE::prs_str);
+   } else if (next.tok == TOK::lam) {
+      setState(STATE::prs_lam);
+   } else if (next.tok == TOK::_if) {
+      setState(STATE::prs_ifel);
+   } else if (next.tok == TOK::_for) {
+      setState(STATE::prs_forch);
+   } else if (next.tok == TOK::_where) {
+      setState(STATE::prs_pholdr);
    }
 
-   if (next.tok == tok::assign) {
+   if (next.tok == TOK::assign) {
       popState();
-      setState(state::prs_mapa);
+      setState(STATE::prs_mapa);
       --idx;
    }
 
    if (operators.count(next.tok)) {
-      setState(state::prs_operator);
+      setState(STATE::prs_operator);
    }
 
-   if (next.tok != tok::open_par && idx > 0 && operators.count(prew.tok) && !stack_of_operators.empty()) {
+   if (next.tok != TOK::open_par && idx > 0 && operators.count(prew.tok) && !stack_of_operators.empty()) {
       if (!un_operators.count(stack_of_operators.back().op.type)) {
          evalLastOperatorToExpr();
       }
@@ -1092,7 +1092,7 @@ void parser::parseOneExpr(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::parsePlaceholder(size_t& idx)
+void PARSER::parsePlaceholder(size_t& idx)
 {
    while (!stack_of_operators.empty()) {
       if (un_operators.count(stack_of_operators.back().op.type)) {
@@ -1108,38 +1108,38 @@ void parser::parsePlaceholder(size_t& idx)
 
 
 // sorry
-void parser::parseLambda(const vec<token>& t, size_t & idx)
+void PARSER::parseLambda(const VEC<TOKEN>& t, size_t & idx)
 {
-   if (curr.tok == tok::lam) {
-      addExpr(new lam({}, {}));
-      setState(state::prs_expr_before_first_call);
+   if (curr.tok == TOK::lam) {
+      addExpr(new LAM({}, {}));
+      setState(STATE::prs_expr_before_first_call);
       return;
    }
 
-   if (prew.tok == tok::close_par) {
-      call* call_ptr = (call*)stack_of_expressions.back();
-      lam* lambda = (lam*)call_ptr->id;
+   if (prew.tok == TOK::close_par) {
+      CALL* call_ptr = (CALL*)stack_of_expressions.back();
+      LAM* lambda = (LAM*)call_ptr->id;
 
       lambda->argsId = call_ptr->args;
       stack_of_expressions.back() = lambda;
       rmExprFromPool(call_ptr);
 
-      while (curr.tok == tok::eol) ++idx;
-      if (curr.tok == tok::dot) {
+      while (curr.tok == TOK::eol) ++idx;
+      if (curr.tok == TOK::dot) {
          // lam(a b).expr
          //        ^
          --idx;
-         setState(state::prs_one_expr);
+         setState(STATE::prs_one_expr);
 
          size_t sizeOfTheStack = s.size();
          {
-            ret* ret_ptr;
-            lambda->s = addStmt(ret_ptr = new ret(nullptr));
+            RET* ret_ptr;
+            lambda->s = addStmt(ret_ptr = new RET(nullptr));
 
-            vec<expr*> buff{};
+            VEC<EXPR*> buff{};
             swap(buff, stack_of_expressions);
             stack_of_one_expr_depths.push_back(depth);
-            while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_one_expr) {
+            while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_one_expr) {
                ++idx;
                switchStateTo(getCurrentState(), t, idx);
             }
@@ -1148,41 +1148,41 @@ void parser::parseLambda(const vec<token>& t, size_t & idx)
             if (stack_of_expressions.size() == 1) {
                ret_ptr->e = stack_of_expressions[0];
             } else {
-               seq* seq_ptr;
-               ret_ptr->e = addExpr(seq_ptr = new seq({}));
+               SEQ* seq_ptr;
+               ret_ptr->e = addExpr(seq_ptr = new SEQ({}));
                stack_of_expressions.pop_back();
                seq_ptr->s = stack_of_expressions;
             }
             stack_of_statements.pop_back();
             swap(buff, stack_of_expressions);
          }
-         if (curr.tok != tok::close_par && next.tok == tok::close_par) {
+         if (curr.tok != TOK::close_par && next.tok == TOK::close_par) {
             freezeClsPar = idx + 1;
          }
       }
-      if (curr.tok == tok::open_br) {
+      if (curr.tok == TOK::open_br) {
          // lam(a b){ stmt stmt stmt }
          //        ^
          --idx;
          freezeClsPar = idx;
-         setState(state::prs_body);
+         setState(STATE::prs_body);
          size_t sizeOfTheStack = s.size();
 
-         vec<stmt*> stmt_buff{};
-         vec<expr*> expr_buff{};
+         VEC<STMT*> stmt_buff{};
+         VEC<EXPR*> expr_buff{};
          
          swap(stmt_buff, stack_of_statements);
          swap(expr_buff, stack_of_expressions);
 
-         vec<operator_and_priority> op_buff;
-         vec<call_and_depth>        call_buff;
-         vec<stacks_of_par_context> par_buff;
+         VEC<OPERATOR_AND_PRIORITY> op_buff;
+         VEC<CALL_AND_DEPTH>        call_buff;
+         VEC<STACK_OF_PAR_CONTEXT> par_buff;
 
          swap(op_buff, stack_of_operators);
          swap(call_buff, stack_of_calls);
          swap(par_buff, stack_of_parentheses);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_body) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_body) {
             ++idx;
             switchStateTo(getCurrentState(), t, idx);
          }
@@ -1203,23 +1203,23 @@ void parser::parseLambda(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::parseWhile(const vec<token>& t, size_t & idx)
+void PARSER::parseWhile(const VEC<TOKEN>& t, size_t & idx)
 {
-   if (curr.tok == tok::_while) {
-      while_loop* fork;
-      addStmt(fork = new while_loop(nullptr, nullptr));
+   if (curr.tok == TOK::_while) {
+      WHILE_LOOP* fork;
+      addStmt(fork = new WHILE_LOOP(nullptr, nullptr));
       {
-         setState(state::prs_one_expr);
+         setState(STATE::prs_one_expr);
          size_t sizeOfTheStack = s.size();
-         vec<expr*> buff{};
-         vec<operator_and_priority> par_buff{};
+         VEC<EXPR*> buff{};
+         VEC<OPERATOR_AND_PRIORITY> par_buff{};
          swap(buff, stack_of_expressions);
          swap(par_buff, stack_of_operators);
 
          --idx;
          stack_of_one_expr_depths.push_back(depth);
-         stack_of_one_expr_bfr_first_tok.push_back(tok::open_br);
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_one_expr) {
+         stack_of_one_expr_bfr_first_tok.push_back(TOK::open_br);
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_one_expr) {
             ++idx;
             switchStateTo(getCurrentState(), t, idx);
          }
@@ -1230,34 +1230,34 @@ void parser::parseWhile(const vec<token>& t, size_t & idx)
          stack_of_expressions.pop_back();
          swap(par_buff, stack_of_operators);
          swap(buff, stack_of_expressions);
-         while (curr.tok != tok::open_br) ++idx;
+         while (curr.tok != TOK::open_br) ++idx;
       }
       // while a==b { stmt stmt stmt }
       //          ^
 
-      if (curr.tok == tok::open_br) {
+      if (curr.tok == TOK::open_br) {
          // while(a b){ stmt stmt stmt }
          //          ^
          --idx;
 
-         setState(state::prs_body);
+         setState(STATE::prs_body);
          size_t sizeOfTheStack = s.size();
 
-         vec<stmt*> stmt_buff{};
-         vec<expr*> expr_buff{};
+         VEC<STMT*> stmt_buff{};
+         VEC<EXPR*> expr_buff{};
 
          swap(stmt_buff, stack_of_statements);
          swap(expr_buff, stack_of_expressions);
 
-         vec<operator_and_priority> op_buff;
-         vec<call_and_depth>        call_buff;
-         vec<stacks_of_par_context> par_buff;
+         VEC<OPERATOR_AND_PRIORITY> op_buff;
+         VEC<CALL_AND_DEPTH>        call_buff;
+         VEC<STACK_OF_PAR_CONTEXT> par_buff;
 
          swap(op_buff, stack_of_operators);
          swap(call_buff, stack_of_calls);
          swap(par_buff, stack_of_parentheses);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_body) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_body) {
             ++idx;
             switchStateTo(getCurrentState(), t, idx);
          }
@@ -1276,24 +1276,24 @@ void parser::parseWhile(const vec<token>& t, size_t & idx)
    }
 }
 
-void parser::parseIf(const vec<token>& t, size_t & idx)
+void PARSER::parseIf(const VEC<TOKEN>& t, size_t & idx)
 {
-   if (curr.tok == tok::_if || curr.tok == tok::_elif) {
-      if_else* fork;
-      addStmt(fork = new if_else(nullptr, nullptr, nullptr));
+   if (curr.tok == TOK::_if || curr.tok == TOK::_elif) {
+      IF_ELSE* fork;
+      addStmt(fork = new IF_ELSE(nullptr, nullptr, nullptr));
       {
-         setState(state::prs_one_expr);
+         setState(STATE::prs_one_expr);
          size_t sizeOfTheStack = s.size();
-         vec<expr*> buff{};
-         vec<operator_and_priority> par_buff{};
+         VEC<EXPR*> buff{};
+         VEC<OPERATOR_AND_PRIORITY> par_buff{};
          swap(buff, stack_of_expressions);
          swap(par_buff, stack_of_operators);
 
          --idx;
          stack_of_one_expr_depths.push_back(depth);
-         stack_of_one_expr_bfr_first_tok.push_back(tok::open_br);
+         stack_of_one_expr_bfr_first_tok.push_back(TOK::open_br);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_one_expr) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_one_expr) {
             ++idx;
 
             switchStateTo(getCurrentState(), t, idx);
@@ -1306,34 +1306,34 @@ void parser::parseIf(const vec<token>& t, size_t & idx)
          stack_of_expressions.pop_back();
          swap(par_buff, stack_of_operators);
          swap(buff, stack_of_expressions);
-         while (curr.tok != tok::open_br) ++idx;
+         while (curr.tok != TOK::open_br) ++idx;
       }
       // if a==b { stmt stmt stmt }
       //       ^
       
-      if (curr.tok == tok::open_br) {
+      if (curr.tok == TOK::open_br) {
          // if(a b){ stmt stmt stmt }
          //       ^
          --idx;
 
-         setState(state::prs_body);
+         setState(STATE::prs_body);
          size_t sizeOfTheStack = s.size();
 
-         vec<stmt*> stmt_buff{};
-         vec<expr*> expr_buff{};
+         VEC<STMT*> stmt_buff{};
+         VEC<EXPR*> expr_buff{};
 
          swap(stmt_buff, stack_of_statements);
          swap(expr_buff, stack_of_expressions);
 
-         vec<operator_and_priority> op_buff;
-         vec<call_and_depth>        call_buff;
-         vec<stacks_of_par_context> par_buff;
+         VEC<OPERATOR_AND_PRIORITY> op_buff;
+         VEC<CALL_AND_DEPTH>        call_buff;
+         VEC<STACK_OF_PAR_CONTEXT> par_buff;
 
          swap(op_buff, stack_of_operators);
          swap(call_buff, stack_of_calls);
          swap(par_buff, stack_of_parentheses);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_body) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_body) {
             ++idx;
 
             switchStateTo(getCurrentState(), t, idx);
@@ -1350,24 +1350,24 @@ void parser::parseIf(const vec<token>& t, size_t & idx)
          swap(expr_buff, stack_of_expressions);
       }
 
-      if (t[idx + 2].tok == tok::_else || t[idx + 2].tok == tok::_elif) {
+      if (t[idx + 2].tok == TOK::_else || t[idx + 2].tok == TOK::_elif) {
 
-         state enter_state = (t[idx + 2].tok == tok::_else) ? state::prs_body : state::prs_if;
+         STATE enter_state = (t[idx + 2].tok == TOK::_else) ? STATE::prs_body : STATE::prs_if;
 
          ++idx;
          popState();
          setState(enter_state);
          size_t sizeOfTheStack = s.size();
 
-         vec<stmt*> stmt_buff{};
-         vec<expr*> expr_buff{};
+         VEC<STMT*> stmt_buff{};
+         VEC<EXPR*> expr_buff{};
 
          swap(stmt_buff, stack_of_statements);
          swap(expr_buff, stack_of_expressions);
 
-         vec<operator_and_priority> op_buff;
-         vec<call_and_depth>        call_buff;
-         vec<stacks_of_par_context> par_buff;
+         VEC<OPERATOR_AND_PRIORITY> op_buff;
+         VEC<CALL_AND_DEPTH>        call_buff;
+         VEC<STACK_OF_PAR_CONTEXT> par_buff;
 
          swap(op_buff, stack_of_operators);
          swap(call_buff, stack_of_calls);
@@ -1394,24 +1394,24 @@ void parser::parseIf(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::parseIfel(const vec<token>& t, size_t & idx)
+void PARSER::parseIfel(const VEC<TOKEN>& t, size_t & idx)
 {
-   if (curr.tok == tok::_if) {
-      ifel* fork;
-      addExpr(fork = new ifel(nullptr, nullptr, nullptr));
+   if (curr.tok == TOK::_if) {
+      IFEL* fork;
+      addExpr(fork = new IFEL(nullptr, nullptr, nullptr));
       {
-         setState(state::prs_one_expr);
+         setState(STATE::prs_one_expr);
          size_t sizeOfTheStack = s.size();
-         vec<expr*> buff{};
-         vec<operator_and_priority> par_buff{};
+         VEC<EXPR*> buff{};
+         VEC<OPERATOR_AND_PRIORITY> par_buff{};
          swap(buff, stack_of_expressions);
          swap(par_buff, stack_of_operators);
 
-         if (next.tok != tok::open_par) --idx;
+         if (next.tok != TOK::open_par) --idx;
          stack_of_one_expr_depths.push_back(depth);
-         stack_of_one_expr_bfr_first_tok.push_back(tok::dot);
+         stack_of_one_expr_bfr_first_tok.push_back(TOK::dot);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_one_expr) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_one_expr) {
             ++idx;
 
             switchStateTo(getCurrentState(), t, idx);
@@ -1427,21 +1427,21 @@ void parser::parseIfel(const vec<token>& t, size_t & idx)
       }
       // if a==b.expr
       //       ^
-      while (next.tok != tok::dot) {
+      while (next.tok != TOK::dot) {
          ++idx;
       }
 
       {
-         setState(state::prs_one_expr);
+         setState(STATE::prs_one_expr);
          size_t sizeOfTheStack = s.size();
-         vec<expr*> buff{};
-         vec<operator_and_priority> op_buff{};
+         VEC<EXPR*> buff{};
+         VEC<OPERATOR_AND_PRIORITY> op_buff{};
          swap(buff, stack_of_expressions);
          swap(op_buff, stack_of_operators);
 
          stack_of_one_expr_depths.push_back(depth);
 
-         while (s.size() > sizeOfTheStack || getCurrentState() == state::prs_one_expr) {
+         while (s.size() > sizeOfTheStack || getCurrentState() == STATE::prs_one_expr) {
             ++idx;
 
             switchStateTo(getCurrentState(), t, idx);
@@ -1450,7 +1450,7 @@ void parser::parseIfel(const vec<token>& t, size_t & idx)
          stack_of_one_expr_depths.pop_back();
 
          if (stack_of_expressions.size() == 1) {
-            col* op = (col*)stack_of_expressions[0];
+            COL* op = (COL*)stack_of_expressions[0];
             fork->l = op->l;
             fork->r = op->r;
             stack_of_expressions.pop_back();
@@ -1463,7 +1463,7 @@ void parser::parseIfel(const vec<token>& t, size_t & idx)
          swap(buff, stack_of_expressions);
 
          freezeParDepthHandlerForOneStep();
-         if (curr.tok == tok::close_par) freezeClsPar = idx;
+         if (curr.tok == TOK::close_par) freezeClsPar = idx;
          --idx;
       }
       popState();
@@ -1471,7 +1471,7 @@ void parser::parseIfel(const vec<token>& t, size_t & idx)
 }
 
 
-void parser::unloadExprsToStmts()
+void PARSER::unloadExprsToStmts()
 {
    while (!stack_of_expressions.empty()) {
       stack_of_statements.push_back(stack_of_expressions.back());
@@ -1481,13 +1481,13 @@ void parser::unloadExprsToStmts()
 }
 
 
-void parser::freezeParDepthHandlerForOneStep()
+void PARSER::freezeParDepthHandlerForOneStep()
 {
    ++freezeParDepthScore;
 }
 
 
-void parser::freezeEolExprStmtHandlerForOneStep()
+void PARSER::freezeEolExprStmtHandlerForOneStep()
 {
    ++freezeEolExprStmtScore;
 }

@@ -5,43 +5,43 @@
 #include "tokens.h"
 #include <algorithm>
 
-struct vis_expr_type : public vis_walker {
-   tok get_type_of(expr* e)
+struct VIS_EXPR_TYPE : public VIS_WALKER {
+   TOK get_type_of(EXPR* e)
    {
       e->enter(this);
       return type;
    }
 
-   void enter(var       *p) override { type = tok::id;        }
-   void enter(num       *p) override { type = tok::num_lit;   }
-   void enter(str       *p) override { type = tok::str_lit;   }
-   void enter(dif       *p) override { type = tok::minus;     }
-   void enter(_or       *p) override { type = tok::_or;       }
-   void enter(therefore *p) override { type = tok::therefore; }
-   void enter(_and      *p) override { type = tok::_and;      }
-   void enter(more      *p) override { type = tok::more;      }
-   void enter(_less     *p) override { type = tok::less;      }
-   void enter(more_eq   *p) override { type = tok::more_eq;   }
-   void enter(less_eq   *p) override { type = tok::less_eq;   }
-   void enter(_equal    *p) override { type = tok::equal;     }
-   void enter(_not      *p) override { type = tok::_not;      }
-   void enter(un_dif    *p) override { type = tok::un_minus;  }
-   void enter(un_add    *p) override { type = tok::un_pluss;  }
-   void enter(call      *p) override { type = tok::_func;     }
-   void enter(ifel      *p) override { type = tok::_if;       }
-   void enter(for_each_ *p) override { type = tok::_for;      }
-   void enter(ret       *p) override { type = tok::_return;   }
-   void enter(assert    *p) override { type = tok::_assert;   }
-   void enter(lam       *p) override { type = tok::lam;       }
+   void enter(VAR       *p) override { type = TOK::id;        }
+   void enter(NUM       *p) override { type = TOK::num_lit;   }
+   void enter(STR       *p) override { type = TOK::str_lit;   }
+   void enter(DIF       *p) override { type = TOK::minus;     }
+   void enter(OR       *p) override { type = TOK::_or;       }
+   void enter(THEREFORE *p) override { type = TOK::therefore; }
+   void enter(AND      *p) override { type = TOK::_and;      }
+   void enter(MORE      *p) override { type = TOK::more;      }
+   void enter(LESS     *p) override { type = TOK::less;      }
+   void enter(MORE_EQ   *p) override { type = TOK::more_eq;   }
+   void enter(LESS_EQ   *p) override { type = TOK::less_eq;   }
+   void enter(EQUAL    *p) override { type = TOK::equal;     }
+   void enter(NOT      *p) override { type = TOK::_not;      }
+   void enter(UN_DIF    *p) override { type = TOK::un_minus;  }
+   void enter(UN_ADD    *p) override { type = TOK::un_pluss;  }
+   void enter(CALL      *p) override { type = TOK::_func;     }
+   void enter(IFEL      *p) override { type = TOK::_if;       }
+   void enter(FOR_EACH *p) override { type = TOK::_for;      }
+   void enter(RET       *p) override { type = TOK::_return;   }
+   void enter(ASSERT    *p) override { type = TOK::_assert;   }
+   void enter(LAM       *p) override { type = TOK::lam;       }
 
 private:
-   tok type;
+   TOK type;
 };
 
 
-struct vis_equality : public vis_walker {
+struct VIS_EQUALITY : public VIS_WALKER {
    
-   bool is_in(expr* A, expr* B)
+   bool is_in(EXPR* A, EXPR* B)
    {
       equal = true;
       _A_start = _A = A;
@@ -57,7 +57,7 @@ struct vis_equality : public vis_walker {
    }
 
 
-   bool equal_types(expr* A, expr* B)
+   bool equal_types(EXPR* A, EXPR* B)
    {
       return expert.get_type_of(A) == expert.get_type_of(B);
    }
@@ -146,20 +146,20 @@ struct vis_equality : public vis_walker {
    }
 
 
-   void enter(dif    *p) override { check_equality_of_not_commut_bin_op(p); }
-   void enter(_and   *p) override { check_equality_of_commut_bin_op(p); }
-   void enter(_or    *p) override { check_equality_of_commut_bin_op(p); }
-   void enter(_not   *p) override { check_un_op_equality(p); }
-   void enter(un_dif *p) override { check_un_op_equality(p); }
-   void enter(un_add *p) override { check_un_op_equality(p); }
+   void enter(DIF    *p) override { check_equality_of_not_commut_bin_op(p); }
+   void enter(AND   *p) override { check_equality_of_commut_bin_op(p); }
+   void enter(OR    *p) override { check_equality_of_commut_bin_op(p); }
+   void enter(NOT   *p) override { check_un_op_equality(p); }
+   void enter(UN_DIF *p) override { check_un_op_equality(p); }
+   void enter(UN_ADD *p) override { check_un_op_equality(p); }
 private:
    bool equal = false;
 
-   expr* _A_start = nullptr;
-   expr* _A       = nullptr;
-   expr* _B       = nullptr;
+   EXPR* _A_start = nullptr;
+   EXPR* _A       = nullptr;
+   EXPR* _B       = nullptr;
 
-   vis_expr_type expert;
+   VIS_EXPR_TYPE expert;
 };
 
 #endif // VIS_EQUALITY_H

@@ -11,26 +11,26 @@
 
 using namespace std;
 
-struct tseitin : public vis_walker {
+struct VIS_TSEITIN : public VIS_WALKER {
    ostream* out        { &cout };
    bool thrfr_to_or    { false };
    bool and_to_lit     { false };
    bool or_to_lit      { false };
    bool not_not_invite { false };
    bool not_not_rm     { false };
-   vis_expr_type expert;
+   VIS_EXPR_TYPE expert;
 
-   set<set<expr*>> CNF;
+   set<set<EXPR*>> CNF;
 
-   void change_therefore_to_or(expr*& phf);
-   void change_and_to_literal (expr*& phi);
-   void change_or_to_literal  (expr*& phi);
-   expr* get_contr(expr* p, bool need_rm = false);
+   void change_therefore_to_or(EXPR*& phf);
+   void change_and_to_literal (EXPR*& phi);
+   void change_or_to_literal  (EXPR*& phi);
+   EXPR* get_contr(EXPR* p, bool need_rm = false);
 // ==----- OVERRIDES -----==
-   void enter(therefore* p) override;
-   void enter(_or*       p) override;
-   void enter(_and*      p) override;
-   void enter(_not*      p) override;
+   void enter(THEREFORE* p) override;
+   void enter(OR*       p) override;
+   void enter(AND*      p) override;
+   void enter(NOT*      p) override;
 };
 
 #endif // #define TSEITIN

@@ -6,14 +6,14 @@
 #include "parser_nodes.h"
 #include "vis_printer.h"
 
-using namespace std;
+//using namespace std;
 
 template <typename T>
-using vec = std::vector<T>;
+using VEC = std::vector<T>;
 
 
-struct parser {
-   enum class state {
+struct PARSER {
+   enum class STATE {
       prs_class,
       prs_func,
 
@@ -51,30 +51,30 @@ struct parser {
       unknown,
    };
 
-   enum class assoc { left, right };
+   enum class ASSOC { left, right };
 
-   struct operator_and_priority {
+   struct OPERATOR_AND_PRIORITY {
       struct {
-         tok type{ tok::unknown };
-         expr* expr{ nullptr };
+         TOK type{ TOK::unknown };
+         EXPR* expr{ nullptr };
       } op;
 
       int priority{ 0 };
    };
 
-   struct call_and_depth {
-      call* call{ nullptr };
+   struct CALL_AND_DEPTH {
+      CALL* call{ nullptr };
       int depth{ 0 };
-      vec<operator_and_priority> stack_of_operators;
+      VEC<OPERATOR_AND_PRIORITY> stack_of_operators;
    };
 
-   struct stacks_of_par_context {
-      vec<expr*>                 stack_of_expressions;
-      vec<stmt*>                 stack_of_statements;
-      vec<operator_and_priority> stack_of_operators;
-      vec<call_and_depth>        stack_of_calls;
+   struct STACK_OF_PAR_CONTEXT {
+      VEC<EXPR*>                 stack_of_expressions;
+      VEC<STMT*>                 stack_of_statements;
+      VEC<OPERATOR_AND_PRIORITY> stack_of_operators;
+      VEC<CALL_AND_DEPTH>        stack_of_calls;
 
-      void swapWith(parser* parser)
+      void swapWith(PARSER* parser)
       {
          swap(parser->stack_of_expressions , stack_of_expressions);
          swap(parser->stack_of_statements  , stack_of_statements );
@@ -83,26 +83,26 @@ struct parser {
       }
    };
 
-   vec<state>                 s{ state::unknown };
-   vec<tok>                   stack_of_one_expr_bfr_first_tok;
-   vec<int>                   stack_of_one_expr_depths;
-   vec<size_t>                stack_of_one_expr_num_of_exprs;
-   vec<stmt*>                 stack_of_statements;
-   vec<expr*>                 stack_of_expressions;
-   vec<operator_and_priority> stack_of_operators;
-   vec<call_and_depth>        stack_of_calls;
-   vec<stacks_of_par_context> stack_of_parentheses;
+   VEC<STATE>                 s{ STATE::unknown };
+   VEC<TOK>                   stack_of_one_expr_bfr_first_tok;
+   VEC<int>                   stack_of_one_expr_depths;
+   VEC<size_t>                stack_of_one_expr_num_of_exprs;
+   VEC<STMT*>                 stack_of_statements;
+   VEC<EXPR*>                 stack_of_expressions;
+   VEC<OPERATOR_AND_PRIORITY> stack_of_operators;
+   VEC<CALL_AND_DEPTH>        stack_of_calls;
+   VEC<STACK_OF_PAR_CONTEXT> stack_of_parentheses;
    int depth{ 0 };
    const int stepDepth{ 5 };
 
-   stmt* addStmt(stmt* s);
-   expr* addExpr(expr* e);
-   call* addCall(call* c);
-   void addFunc(func* p);
+   STMT* addStmt(STMT* s);
+   EXPR* addExpr(EXPR* e);
+   CALL* addCall(CALL* c);
+   void addFunc(FUNC* p);
    void addStruct(STRUCT* p);
 
-   template <typename T> void addOperatorTmpl(tok type);
-   template <typename T> void addUnOperatorTmpl(tok type, const vec<token>& t, size_t& idx);
+   template <typename T> void addOperatorTmpl(TOK type);
+   template <typename T> void addUnOperatorTmpl(TOK type, const VEC<TOKEN>& t, size_t& idx);
    template <typename T> void evalLastOperatorToExprTmpl();
    template <typename T> void evalLastUnOperatorToExprTmpl();
 
@@ -110,74 +110,74 @@ struct parser {
    size_t freezeClsPar{ 0 };
    size_t freezeEolExprStmtScore{ 0 };
 
-   void   addOperator(tok type);
+   void   addOperator(TOK type);
    void   evalLastOperatorToExpr();
    void   evalLastUnOperatorToExpr();
-   bool   hasStateInHistory(state state);
-   void   goBackInHistoryTo(state state);
-   int    getPriorityFor(tok type);
-   assoc  getAssociativityFor(tok type);
+   bool   hasStateInHistory(STATE state);
+   void   goBackInHistoryTo(STATE state);
+   int    getPriorityFor(TOK type);
+   ASSOC  getAssociativityFor(TOK type);
    void   freezeParDepthHandlerForOneStep();
    void   freezeEolExprStmtHandlerForOneStep();
-   bool   conditionToStopParsingOneExpr(const vec<token>& t, size_t & idx);
+   bool   conditionToStopParsingOneExpr(const VEC<TOKEN>& t, size_t & idx);
    void   unloadExprsToStmts();
 
-   void  setState(state state);
-   state getCurrentState();
-   state popState();
+   void  setState(STATE state);
+   STATE getCurrentState();
+   STATE popState();
 
-   void parseStmt       (const vec<token>& tokens, size_t& idx);
-   void parseBreak      (const vec<token>& tokens, size_t& idx);
-   void parseReturn     (const vec<token>& tokens, size_t& idx);
-   void parseContinue   (const vec<token>& tokens, size_t& idx);
-   void parseBody       (const vec<token>& tokens, size_t& idx);
-   void parseAssign     (const vec<token>& tokens, size_t& idx);
-   void parseMapa       (const vec<token>& tokens, size_t& idx);
-   void parseStmtExpr   (const vec<token>& tokens, size_t& idx);
-   void parseExpr       (const vec<token>& tokens, size_t& idx);
-   void parseLambda     (const vec<token>& tokens, size_t& idx);
-   void parseOpnPar     (const vec<token>& tokens, size_t& idx);
-   void parseClsPar     (const vec<token>& tokens, size_t& idx);
-   void parseOperator   (const vec<token>& tokens, size_t& idx);
-   void parseNum        (const vec<token>& tokens, size_t& idx);
-   void parseId         (const vec<token>& tokens, size_t& idx);
-   void parseVar        (const vec<token>& tokens, size_t& idx);
-   void parseStr        (const vec<token>& tokens, size_t& idx);
-   void parseFunc       (const vec<token>& tokens, size_t& idx);
-   void parseCall       (const vec<token>& tokens, size_t& idx);
-   void parseWhile      (const vec<token>& tokens, size_t& idx);
-   void parseIf         (const vec<token>& tokens, size_t& idx);
-   void parseIfel       (const vec<token>& tokens, size_t& idx);
-   void parseForEach    (const vec<token>& tokens, size_t& idx);
-   void parseFor        (const vec<token>& tokens, size_t& idx);
-   void parseStruct     (const vec<token>& tokens, size_t& idx);
-   void parseOneExpr    (const vec<token>& tokens, size_t& idx);
+   void parseStmt       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseBreak      (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseReturn     (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseContinue   (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseBody       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseAssign     (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseMapa       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseStmtExpr   (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseExpr       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseLambda     (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseOpnPar     (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseClsPar     (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseOperator   (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseNum        (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseId         (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseVar        (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseStr        (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseFunc       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseCall       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseWhile      (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseIf         (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseIfel       (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseForEach    (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseFor        (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseStruct     (const VEC<TOKEN>& tokens, size_t& idx);
+   void parseOneExpr    (const VEC<TOKEN>& tokens, size_t& idx);
    void parsePlaceholder(size_t& idx);
 
-   void parse(const vec<token>& tokens);
-   void switchStateTo(state state, const vec<token>& tokens, size_t& idx);
+   void parse(const VEC<TOKEN>& tokens);
+   void switchStateTo(STATE state, const VEC<TOKEN>& tokens, size_t& idx);
 };
 // ------------------------------------------------------
-template<typename T> void parser::addOperatorTmpl(tok type)
+template<typename T> void PARSER::addOperatorTmpl(TOK type)
 {
    int priority = getPriorityFor(type);
    T* o = new T(nullptr, nullptr);
-   exprPool.push_back(expr_ptr(o));
+   exprPool.push_back(EXPR_PTR(o));
    stack_of_operators.push_back({ { type, o }, priority });
 }
 // ------------------------------------------------------
-template<typename T> void parser::addUnOperatorTmpl(tok type, const vec<token>& t, size_t& idx)
+template<typename T> void PARSER::addUnOperatorTmpl(TOK type, const VEC<TOKEN>& t, size_t& idx)
 {
    int priority = getPriorityFor(t[idx].tok);
    T* o = new T(nullptr);
-   exprPool.push_back(expr_ptr(o));
+   exprPool.push_back(EXPR_PTR(o));
    stack_of_operators.push_back({ { type, o }, priority });
    --idx;
    stack_of_one_expr_num_of_exprs.push_back(stack_of_expressions.size());
-   setState(state::prs_one_expr);
+   setState(STATE::prs_one_expr);
 }
 // ------------------------------------------------------
-template<typename T> void parser::evalLastOperatorToExprTmpl()
+template<typename T> void PARSER::evalLastOperatorToExprTmpl()
 {
    T* o = (T*)(stack_of_operators.back().op.expr);
    if (!stack_of_expressions.empty()) {
@@ -194,7 +194,7 @@ template<typename T> void parser::evalLastOperatorToExprTmpl()
    stack_of_expressions.push_back(o);
 }
 // ------------------------------------------------------
-template<typename T> void parser::evalLastUnOperatorToExprTmpl()
+template<typename T> void PARSER::evalLastUnOperatorToExprTmpl()
 {
    T* o = (T*)(stack_of_operators.back().op.expr);
    if (!stack_of_expressions.empty()) {
