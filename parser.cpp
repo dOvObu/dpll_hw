@@ -126,7 +126,7 @@ void PARSER::evalLastOperatorToExpr()
    TOK type = stack_of_operators.back().op.type;
    if (!stack_of_expressions.empty())
       if (stack_of_expressions.back() == nullptr || (stack_of_expressions.size() > 1 && stack_of_expressions[stack_of_expressions.size() - 2] == nullptr)) {
-         cout << "\nevolution failed, becouse " << (stack_of_expressions.back() == nullptr ? "right" : "left") << " argument is nil\n";
+         //cout << "\nevolution failed, becouse " << (stack_of_expressions.back() == nullptr ? "right" : "left") << " argument is nil\n";
          return;
       }
 #define tryWorkOnOp(_Token, _T) if (type == _Token) { evalLastOperatorToExprTmpl<_T>(); }
@@ -145,10 +145,10 @@ void PARSER::evalLastOperatorToExpr()
    tryWorkOnOp(TOK::_and      ,  AND      )
    tryWorkOnOp(TOK::_or       ,  OR       )
 #undef tryWorkOnOp
-   VIS_PRINTER writer;
-   cout << "\nafter last evolution of operator to expr:\n   ";
-   stack_of_expressions.back()->enter(&writer);
-   cout << endl;
+   //VIS_PRINTER writer;
+   //cout << "\nafter last evolution of operator to expr:\n   ";
+   //stack_of_expressions.back()->enter(&writer);
+   //cout << endl;
 }
 
 
@@ -158,7 +158,7 @@ void PARSER::evalLastUnOperatorToExpr()
    if (!stack_of_one_expr_num_of_exprs.empty()) stack_of_one_expr_num_of_exprs.pop_back();
    if (!stack_of_expressions.empty())
       if (stack_of_expressions.back() == nullptr) {
-         cout << "\nevolution failed, becouse right argument is nil\n";
+         //cout << "\nevolution failed, becouse right argument is nil\n";
          return;
       }
 #define tryWorkOnOp(_Token, _T) if (type == _Token) { evalLastUnOperatorToExprTmpl<_T>(); }
@@ -166,10 +166,10 @@ void PARSER::evalLastUnOperatorToExpr()
       tryWorkOnOp(TOK::un_minus, UN_DIF)
       tryWorkOnOp(TOK::_not, NOT)
 #undef tryWorkOnOp
-      VIS_PRINTER writer;
-   cout << "\nafter last evolution of operator to expr:\n   ";
-   stack_of_expressions.back()->enter(&writer);
-   cout << endl;
+   //VIS_PRINTER writer;
+   //cout << "\nafter last evolution of operator to expr:\n   ";
+   //stack_of_expressions.back()->enter(&writer);
+   //cout << endl;
 }
 
 
@@ -514,8 +514,11 @@ void PARSER::parseExpr(const VEC<TOKEN>& t, size_t& idx)
       setState(STATE::prs_operator);
    }
 
-   if ((next.tok == TOK::comma && idx > 0 && operators.count(prew.tok)) && !stack_of_operators.empty()) {
+   if (((next.tok == TOK::comma /*|| (stack_of_expressions.size() > stack_of_operators.size() && next.tok != TOK::open_par)*/) && idx > 0 /*&& operators.count(prew.tok)*/) && !stack_of_operators.empty()) {
       evalLastOperatorToExpr();
+   }
+   else {
+      cout << "";
    }
 }
 
@@ -1084,7 +1087,7 @@ void PARSER::parseOneExpr(const VEC<TOKEN>& t, size_t & idx)
       setState(STATE::prs_operator);
    }
 
-   if (next.tok != TOK::open_par && idx > 0 && operators.count(prew.tok) && !stack_of_operators.empty()) {
+   if (next.tok != TOK::open_par && idx > 0 && stack_of_expressions.size() > stack_of_operators.size()/*&& operators.count(prew.tok)*/ && !stack_of_operators.empty()) {
       if (!un_operators.count(stack_of_operators.back().op.type)) {
          evalLastOperatorToExpr();
       }

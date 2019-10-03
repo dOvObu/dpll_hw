@@ -5,34 +5,41 @@
 #include <string>
 #include <memory>
 #include <set>
+#include <SFML/Graphics.hpp>
 
-#include "vis_base.h"
-#include "vis_exec.h"
-#include "parser_nodes.h"
-#include "vis_printer.h"
-#include "tokens.h"
-#include "parser.h"
-#include "lexer_wrapper.h"
+#include "mau_tools.h"
 
-using namespace std;
-template<typename T>
-using VEC = vector<T>;
+sf::RectangleShape shape;
 
 int main()
 {
-   lex_it("./file.mau");
+   //*
+   sf::RenderWindow window(sf::VideoMode(600,400), "Title");
+   shape.setPosition(10, 10);
+   
+   call_backs["resize"] = [](VIS_EXEC* context, VEC<EXPR*>& args)->void {
+      int x, y;
+      y = context->num_stack.back();
+      context->num_stack.pop_back();
+      x = context->num_stack.back();
+      context->num_stack.pop_back();
+      shape.setSize(sf::Vector2f(x, y));
+   };
 
-   PARSER parser;
-   parser.s.push_back(PARSER::STATE::prs_body);
-   parser.parse(tokens);
-
-   {
-      VIS_EXEC exec;
-      stmtPool[0]->enter(&exec);
+   while (window.isOpen()) {
+      sf::Event ev;
+      while (window.pollEvent(ev)) {
+         if (ev.type == sf::Event::Closed) {
+            window.close();
+         }
+      }
+      run_script("C:/Users/Zver/Desktop/main.mau");
+      window.clear();
+      window.draw(shape);
+      window.display();
    }
-
-   show_contents_of_pool();
-   std::cout << "\n depth:\t" << parser.depth;
-
-   std::cin.get();
+   //*/
 }
+
+
+//lex_it("./file.mau");

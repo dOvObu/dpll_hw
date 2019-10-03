@@ -49,6 +49,17 @@ void rm_eols_after_open_bracket(VEC<TOKEN>& ts)
 }
 
 
+void put_eol_befire_close_bracket(VEC<TOKEN>& ts)
+{
+   for (size_t idx = 0; idx < ts.size() - 1; ++idx) {
+      if (ts[idx + 1].tok == TOK::close_br) {
+         ts.insert(begin(ts) + idx, TOK::eol);
+         ++idx;
+      }
+   }
+}
+
+
 void lex_it(fs::path path)
 {
    tokens.push_back(TOK::open_br);
@@ -66,6 +77,7 @@ void lex_it(fs::path path)
    rm_eols_after_key_words(tokens);
    rm_eols_after_operators(tokens);
    rm_eols_after_open_bracket(tokens);
+   put_eol_befire_close_bracket(tokens);
 
-   std::cout << "tokens.size: " << tokens.size() << std::endl;
+   //std::cout << "tokens.size: " << tokens.size() << std::endl;
 }
