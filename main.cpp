@@ -6,6 +6,7 @@
 #include <memory>
 #include <set>
 #include <SFML/Graphics.hpp>
+#include <Windows.h>
 
 #include "mau_tools.h"
 
@@ -14,6 +15,11 @@ sf::RectangleShape shape;
 int main()
 {
    //*
+   setlocale(NULL,"ru_RU");
+   
+   SetConsoleOutputCP(1251);
+   SetConsoleCP(1251);
+
    sf::RenderWindow window(sf::VideoMode(600,400), "Title");
    shape.setPosition(10, 10);
    

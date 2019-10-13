@@ -34,28 +34,47 @@ struct VIS_EXEC : public VIS_WALKER {
       Integer,
       String,
       Object,
+      Vector,
       Arch,
       Func,
       Any,
    };
-   set<EXPR*> integerPool;
-   set<EXPR*> stringPool;
-   set<EXPR*> objectPool;
+
+   struct VECTOR_BASE {
+      virtual size_t getSize() { return 0; }
+      virtual TYPES  getType() { return TYPES::Any; }
+      virtual ~VECTOR_BASE() = default;
+   };
+
+   template <typename T>
+   struct VECTOR_T : public T {
+      VEC<T> seq;
+      TYPES type;
+      size_t getSize() override { return seq.size(); }
+      TYPES  getType() override { return type; }
+      ~VECTOR_T() = default;
+   };
+
+   //set<EXPR*> integerPool;
+   //set<EXPR*> stringPool;
+   //set<EXPR*> objectPool;
    map<string, FUNC*> functions;
-   map<EXPR*, pair<VEC<TYPES>, TYPES>> archPool;
+   //map<EXPR*, pair<VEC<TYPES>, TYPES>> archPool;
    TYPES return_type = TYPES::Any;
    bool return_found = false;
 
    // -- var tables --
-   map<string, TYPES> type_of_variable;
-   map<string, int>    num_variables;
-   map<string, LAM*>   arch_variables;
-   map<string, string> str_variables;
-   VEC<int>    num_stack;
-   VEC<string> str_stack;
-   VEC<LAM*>   arch_stack;
-   VEC<FUNC*>  func_stack;
-   VEC<TYPES>  types_stack;
+   map<string, TYPES>        type_of_variable ;
+   map<string, int>              num_variables;
+   map<string, LAM*>            arch_variables;
+   map<string, string>           str_variables;
+   map<string, VECTOR_BASE*>     vec_variables;
+   VEC<TYPES>                  types_stack;
+   VEC<int>                      num_stack;
+   VEC<LAM*>                    arch_stack;
+   VEC<string>                   str_stack;
+   VEC<FUNC*>                   func_stack;
+   VEC<shared_ptr<VECTOR_BASE>>  vec_stack;
 
 
    void exec_tseitin(VEC<EXPR*>& args);
@@ -76,10 +95,12 @@ struct VIS_EXEC : public VIS_WALKER {
    void enter(LAM       *p) override;
    void enter(STR       *p) override;
    void enter(NUM       *p) override;
+   void enter(SEQ       *p) override;
 private:
    void show_cnf();
    bool try_to_call_nat_func(CALL* p);
    void assign_expr_to_id(EXPR* p, string& id, map<string, int>& num_vars, map<string, string>& str_vars, map<string, LAM*>& arch_vars);
 };
+
 
 #endif // #define EXEC

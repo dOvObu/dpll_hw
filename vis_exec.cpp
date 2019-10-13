@@ -305,15 +305,13 @@ void VIS_EXEC::enter(VAR* p)
 
 void VIS_EXEC::enter(CALL* p)
 {
-   //VIS_WALKER::enter(p);
-
    if (p->id != nullptr) {
       check_calls_id(p->id);
    }
 
    if (!try_to_call_nat_func(p)) {
-      VEC<EXPR*>* args{ nullptr };
-      STMT* body{ nullptr };
+      VEC<EXPR*> *args{ nullptr };
+      STMT       *body{ nullptr };
       if (types_stack.back() == TYPES::Arch) {
          LAM* arch = arch_stack.back();
          args = &(arch->argsId);
@@ -335,9 +333,10 @@ void VIS_EXEC::enter(CALL* p)
       // Execute arguments and put in arg_vars
       {
          size_t idx = 0;
-         map<string, int>    new_num_vars;
-         map<string, string> new_str_vars;
-         map<string, LAM*>   new_arch_vars;
+         map<string, int>          new_num_vars;
+         map<string, string>       new_str_vars;
+         map<string, VECTOR_BASE*> new_vec_vars;
+         map<string, LAM*>        new_arch_vars;
          if (args != nullptr) {
             for (auto& arg : *args) {
                new_context.assign_expr_to_id(p->args[idx], ((VAR*)arg)->id, new_num_vars, new_str_vars, new_arch_vars);
@@ -368,21 +367,32 @@ void VIS_EXEC::enter(CALL* p)
 void VIS_EXEC::enter(LAM * p)
 {
    types_stack.push_back(TYPES::Arch);
+
    arch_stack.push_back(p);
 }
 
 
 void VIS_EXEC::enter(STR * p)
 {
-   str_stack.push_back(p->s);
    types_stack.push_back(TYPES::String);
+
+   str_stack.push_back(p->s);
 }
 
 
 void VIS_EXEC::enter(NUM* p)
 {
-   num_stack.push_back(p->n);
    types_stack.push_back(TYPES::Integer);
+
+   num_stack.push_back(p->n);
+}
+
+
+void VIS_EXEC::enter(SEQ * p)
+{
+   for (auto& e : p->s) {
+
+   }
 }
 
 
